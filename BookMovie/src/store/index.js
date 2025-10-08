@@ -8,14 +8,5 @@ import GroupTheatherReducer from "./../MyProject/AdminTemplate/addCalender/CumRa
 import DeleteMovieReducer from "./../MyProject/AdminTemplate/adminPage/deletefilm";
 import CalenderReducer from "./../MyProject/AdminTemplate/addCalender/TaoLichChieu";
 export const store = configureStore({
-  reducer: {
-    AuthenReducer,
-    ManaReducer,
-    AdminPageReducer,
-    AddFilmReducer,
-    SystemTheaterReducer,
-    GroupTheatherReducer,
-    DeleteMovieReducer,
-    CalenderReducer,
-  },
+  reducer: {},
 });
