@@ -7,6 +7,8 @@ import SystemTheaterReducer from "./../MyProject/AdminTemplate/addCalender/Hetho
 import GroupTheatherReducer from "./../MyProject/AdminTemplate/addCalender/CumRapTheoHeThong";
 import DeleteMovieReducer from "./../MyProject/AdminTemplate/adminPage/deletefilm";
 import CalenderReducer from "./../MyProject/AdminTemplate/addCalender/TaoLichChieu";
+import listMovieReducer from "./../MyProject/HomeTemplate/ListMovie/slice";
+import detailReducer from "./../MyProject/HomeTemplate/DetailMovie/slice";
 export const store = configureStore({
   reducer: {
     AuthenReducer,
@@ -17,5 +19,7 @@ export const store = configureStore({
     GroupTheatherReducer,
     DeleteMovieReducer,
     CalenderReducer,
+    listMovieReducer,
+    detailReducer,
   },
 });
