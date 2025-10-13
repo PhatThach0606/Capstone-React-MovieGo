@@ -25,6 +25,7 @@ function App() {
 
           {/* AdminTemplate  */}
           <Route path="admin" element={<AdminTemplate />}>
+
             <Route path="adminpage" element={<AdminPage />} />
             <Route path="addfilm" element={<AddNewFilm />} />
             <Route path="addcalender" element={<AddCalender />} />
@@ -32,6 +33,9 @@ function App() {
             <Route path="list-user" element={<ListUser />} />
             <Route path="add-user" element={<AddUser />} />
             <Route path="edit-user" element={<EditUser />} />
+
+        
+
           </Route>
           {/* Authen  */}
           <Route path="auth" element={<Authentication />} />
