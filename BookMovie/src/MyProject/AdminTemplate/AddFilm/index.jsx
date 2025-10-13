@@ -1,14 +1,26 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useState, useEffect } from "react";
 import { AddFilm } from "./slice";
-import { useState } from "react";
-import { useSelector } from "react-redux";
+
 export default function AddNewFilm() {
+  const dispatch = useDispatch();
   const loading = useSelector((state) => state.AddFilmReducer.loading);
   const data = useSelector((state) => state.AddFilmReducer.data);
+  const error = useSelector((state) => state.AddFilmReducer.error);
+  console.log(error?.response?.data?.content);
+  const [message, setMessage] = useState("");
 
-  const dispatch = useDispatch();
-  const [hinhAnh, setHinhAnh] = useState(null);
-  const [formValue, setformValue] = useState({
+  useEffect(() => {
+    if (error) {
+      const msg = error?.response?.data?.content || "Đã có lỗi xảy ra";
+      setMessage(msg);
+
+      const timer = setTimeout(() => setMessage(""), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
+
+  const [formValue, setFormValue] = useState({
     maPhim: "",
     tenPhim: "",
     biDanh: "",
@@ -16,107 +28,183 @@ export default function AddNewFilm() {
     moTa: "",
     maNhom: "",
     ngayKhoiChieu: "",
-    danhGia: "",
+    danhGia: 0,
     hot: false,
     dangChieu: false,
     sapChieu: false,
+    hinhAnh: "",
   });
+
+  const [hinhAnhFile, setHinhAnh] = useState(null);
+
+  const [errorMess, setErrorMess] = useState({
+    tenPhim: "",
+    biDanh: "",
+    trailer: "",
+    moTa: "",
+    maNhom: "",
+    ngayKhoiChieu: "",
+    danhGia: "",
+  });
+
+  // ----------------- Handle onchange -----------------
   const handleOnchange = (e) => {
     const { name, value, checked, type } = e.target;
-    setformValue({
+
+    if (name === "sapChieu") {
+      setFormValue({
+        ...formValue,
+        sapChieu: checked,
+        dangChieu: checked ? false : formValue.dangChieu,
+      });
+      return;
+    }
+
+    if (name === "dangChieu") {
+      setFormValue({
+        ...formValue,
+        dangChieu: checked,
+        sapChieu: checked ? false : formValue.sapChieu,
+      });
+      return;
+    }
+
+    setFormValue({
       ...formValue,
       [name]: type === "checkbox" ? checked : value,
     });
   };
-  const handleFileChange = (e) => {
-    setHinhAnh(e.target.files[0]);
+
+  // ----------------- Handle blur validation -----------------
+  const handleOnblur = (e) => {
+    const { name, value } = e.target;
+    let message = value === "" ? `Vui lòng nhập ${name}` : "";
+
+    switch (name) {
+      case "tenPhim":
+        if (!value) {
+          message = "Vui lòng nhập Tên Phim";
+        } else if (!/^[\p{L}0-9\s]+$/u.test(value)) {
+          message = "Tên Phim chỉ được chứa chữ cái, số và khoảng trắng";
+        }
+        break;
+
+      case "biDanh":
+        if (!value) message = "Vui lòng nhập Bí Danh";
+        else if (!/^[a-zA-Z0-9\s-]+$/.test(value))
+          message = "Bí Danh chỉ được chứa chữ, số, dấu '-' và khoảng trắng";
+        break;
+
+      case "trailer":
+        if (!value) message = "Vui lòng nhập trailer";
+        else if (
+          !/^(https?:\/\/)?([\w\-]+\.)+[\w]{2,}(\/[\w\-._~:/?#[\]@!$&'()*+,;=]*)?$/.test(
+            value
+          )
+        )
+          message = "Trailer phải là URL hợp lệ";
+        break;
+
+      case "moTa":
+        if (!value) message = "Vui lòng nhập mô tả";
+        break;
+
+      case "maNhom":
+        if (!value) {
+          message = "Vui lòng nhập mã nhóm (mã GP06 nhóm mình nha)";
+        } else if (!/^GP(0[1-9]|1[0-5])$/.test(value)) {
+          message = "Mã nhóm phải từ GP01 tới GP15";
+        }
+        break;
+
+      case "ngayKhoiChieu":
+        if (!value) message = "Vui lòng nhập ngày khởi chiếu";
+        else if (!/^\d{4}-\d{2}-\d{2}$/.test(value))
+          message = "Ngày khởi chiếu phải có định dạng YYYY-MM-DD";
+        break;
+
+      case "danhGia":
+        if (!value) message = "Vui lòng nhập đánh giá";
+        else if (!/^[0-9]{1,2}$/.test(value) || Number(value) > 10)
+          message = "Đánh giá phải là số từ 0 → 10";
+        break;
+
+      default:
+        break;
+    }
+
+    setErrorMess({ ...errorMess, [name]: message });
   };
 
+  // ----------------- Handle file change -----------------
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setHinhAnh(file);
+    if (file) {
+      const previewURL = URL.createObjectURL(file);
+      setFormValue({ ...formValue, hinhAnh: previewURL });
+    }
+  };
+
+  // ----------------- Format date -----------------
+  const formatDate = (dateString) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+
+  // ----------------- Handle submit -----------------
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData();
 
-    for (let movie in formValue) {
-      formData.append(movie, formValue[movie]);
-    }
-    if (hinhAnh) {
-      formData.append("File", hinhAnh, hinhAnh.name);
-    }
+    formData.append("tenPhim", formValue.tenPhim);
+    formData.append("biDanh", formValue.biDanh);
+    formData.append("trailer", formValue.trailer);
+    formData.append("moTa", formValue.moTa);
+    formData.append("maNhom", formValue.maNhom);
+    formData.append("ngayKhoiChieu", formatDate(formValue.ngayKhoiChieu));
+    formData.append("sapChieu", formValue.sapChieu);
+    formData.append("dangChieu", formValue.dangChieu);
+    formData.append("hot", formValue.hot);
+    formData.append("danhGia", formValue.danhGia);
+
+    if (hinhAnhFile) formData.append("File", hinhAnhFile);
 
     dispatch(AddFilm(formData));
   };
-  //   const dispatch = useDispatch();
 
-  //   const formData = new FormData();
-  //   formData.append("maPhim", values.maPhim);
-  //   formData.append("tenPhim", values.tenPhim);
-  //   formData.append("biDanh", values.biDanh);
-  //   formData.append("trailer", values.trailer);
-  //   formData.append("hinhAnh", values.hinhAnh);
-  //   formData.append("moTa", values.moTa);
-  //   formData.append("maNhom", values.maNhom);
-  //   formData.append("ngayKhoiChieu", values.ngayKhoiChieu);
-  //   formData.append("danhGia", values.danhGia);
-  //   formData.append("hot", values.hot);
-  //   formData.append("dangChieu", values.dangChieu);
-  //   formData.append("sapChieu", values.sapChieu);
-
-  //   dispatch(AddFilm(formData));
-
+  // ----------------- Render -----------------
   return (
     <div className="container mx-auto mt-10 items-center flex justify-center">
-      <div className=" w-[60%] ">
+      <div className="w-[60%]">
+        {message && (
+          <div className="text-center mb-5 text-amber-500 font-bold text-xl">
+            {message}
+          </div>
+        )}
         <form onSubmit={handleSubmit} className="text-black">
           <div className="grid gap-4 mb-4 grid-cols-2">
             {/* Tên phim */}
             <div className="col-span-2">
-              <label
-                htmlFor="tenPhim"
-                className="block mb-2 text-sm font-medium text-black"
-              >
+              <label className="block mb-2 text-sm font-medium text-black">
                 Tên Phim
               </label>
               <input
                 onChange={handleOnchange}
+                onBlur={handleOnblur}
                 type="text"
                 name="tenPhim"
-                id="tenPhim"
-                className="w-full rounded-xl border px-4 py-2 text-black placeholder-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 outline-none transition"
+                className="w-full rounded-xl border px-4 py-2"
                 placeholder="Nhập tên phim"
-                required
+                value={formValue.tenPhim}
               />
-            </div>
-
-            {/* Mã phim */}
-            <div className="col-span-1">
-              <label className="block mb-2 text-sm font-medium text-black">
-                Mã phim
-              </label>
-              <input
-                onChange={handleOnchange}
-                type="text"
-                name="maPhim"
-                id="maPhim"
-                className="w-full rounded-xl border  px-4 py-2 text-black placeholder-slate-400 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/50 outline-none transition"
-                placeholder="Nhập mã phim"
-                required
-              />
-            </div>
-
-            {/* Bí danh */}
-            <div className="col-span-1">
-              <label className="block mb-2 text-sm font-medium text-black">
-                Bí danh Phim
-              </label>
-              <input
-                onChange={handleOnchange}
-                type="text"
-                name="biDanh"
-                id="biDanh"
-                className="w-full rounded-xl border  px-4 py-2 text-black placeholder-slate-400 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/50 outline-none transition"
-                placeholder="Nhập bí danh"
-                required
-              />
+              <span className="text-red-500 text-sm block whitespace-pre-line">
+                {errorMess.tenPhim}
+              </span>
             </div>
 
             {/* Trailer */}
@@ -126,30 +214,38 @@ export default function AddNewFilm() {
               </label>
               <input
                 onChange={handleOnchange}
-                value={formValue.trailer}
+                onBlur={handleOnblur}
                 type="text"
                 name="trailer"
-                id="trailer"
-                className="w-full rounded-xl border  px-4 py-2 text-black placeholder-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 outline-none transition"
+                className="w-full rounded-xl border px-4 py-2"
                 placeholder="Nhập trailer"
-                required
+                value={formValue.trailer}
               />
+              <span className="text-red-500 text-sm block whitespace-pre-line">
+                {errorMess.trailer}
+              </span>
             </div>
 
             {/* Hình ảnh */}
-            <div className="col-span-1 ">
+            <div className="col-span-1">
               <label className="block mb-2 text-sm font-medium text-black">
                 Hình ảnh
               </label>
               <input
-                className="block w-full text-sm text-black border  rounded-lg cursor-pointer   dark:placeholder-gray-400"
-                aria-describedby="user_avatar_help"
                 onChange={handleFileChange}
                 type="file"
                 accept="image/*"
                 name="hinhAnh"
                 id="hinhAnh"
+                className="block w-full text-sm border rounded-lg cursor-pointer"
               />
+              {formValue.hinhAnh && (
+                <img
+                  className="mt-2 w-20 h-20 rounded object-cover"
+                  src={formValue.hinhAnh}
+                  alt="preview"
+                />
+              )}
             </div>
 
             {/* Ngày khởi chiếu */}
@@ -159,13 +255,15 @@ export default function AddNewFilm() {
               </label>
               <input
                 onChange={handleOnchange}
-                value={formValue.ngayKhoiChieu}
+                onBlur={handleOnblur}
                 type="date"
                 name="ngayKhoiChieu"
-                id="ngayKhoiChieu"
-                className="w-full rounded-xl border  px-4 py-2 text-black placeholder-slate-400 focus:border-green-500 focus:ring-2 focus:ring-green-500/50 outline-none transition"
-                required
+                className="w-full rounded-xl border px-4 py-2"
+                value={formValue.ngayKhoiChieu}
               />
+              <span className="text-red-500 text-sm block whitespace-pre-line">
+                {errorMess.ngayKhoiChieu}
+              </span>
             </div>
 
             {/* Đánh giá */}
@@ -174,113 +272,100 @@ export default function AddNewFilm() {
                 Đánh giá
               </label>
               <input
+                min={0}
+                max={10}
                 onChange={handleOnchange}
+                onBlur={handleOnblur}
                 type="number"
                 name="danhGia"
-                id="danhGia"
-                className="w-full rounded-xl border  px-4 py-2 text-black placeholder-slate-400 focus:border-green-500 focus:ring-2 focus:ring-green-500/50 outline-none transition"
+                className="w-full rounded-xl border px-4 py-2"
                 placeholder="Nhập đánh giá"
-                required
+                value={formValue.danhGia}
               />
-            </div>
-
-            {/* Độ hot */}
-            <div className="col-span-1">
-              <label className="block mb-2 text-sm font-medium text-black">
-                Độ hot
-              </label>
-              <input
-                onChange={handleOnchange}
-                checked={formValue.hot}
-                type="checkbox"
-                name="hot"
-                id="hot"
-                className=" rounded border border-black  px- py-2 text-black  focus:border-pink-500 focus:ring-2 focus:ring-pink-500/50 outline-none transition"
-                required
-              />
-            </div>
-
-            {/* Công bố */}
-            <div className="col-span-2 sm:col-span-1">
-              <label className="block mb-2 text-sm font-medium text-black">
-                Công bố
-              </label>
-              <div className="flex gap-5">
-                <div className="flex gap-2 justify-center items-center">
-                  <label
-                    className="block  text-sm font-medium text-black"
-                    htmlFor=""
-                  >
-                    Sắp chiếu
-                  </label>
-                  <input
-                    onChange={handleOnchange}
-                    checked={formValue.sapChieu}
-                    name="sapChieu"
-                    id="sapChieu"
-                    className=" rounded border border-black  px-2 py-2 text-black  focus:border-pink-500 focus:ring-2 focus:ring-pink-500/50 outline-none transition"
-                    type="checkbox"
-                  />
-                </div>
-                <div className=" flex gap-2 justify-center items-center">
-                  <label
-                    className="block  text-sm font-medium text-black"
-                    htmlFor="dangChieu"
-                  >
-                    Đang chiếu
-                  </label>
-                  <input
-                    onChange={handleOnchange}
-                    checked={formValue.dangChieu}
-                    name="dangChieu"
-                    id="dangChieu"
-                    className=" rounded border border-black  px-2 py-2 text-black  focus:border-pink-500 focus:ring-2 focus:ring-pink-500/50 outline-none transition"
-                    type="checkbox"
-                  />
-                </div>
-              </div>
+              <span className="text-red-500 text-sm block whitespace-pre-line">
+                {errorMess.danhGia}
+              </span>
             </div>
 
             {/* Mã nhóm */}
             <div className="col-span-1">
-              <label className="block mb-2 text-sm font-medium black">
-                Mã Nhóm
+              <label className="block mb-2 text-sm font-medium text-black">
+                Mã nhóm
               </label>
               <input
                 onChange={handleOnchange}
+                onBlur={handleOnblur}
                 type="text"
                 name="maNhom"
-                id="maNhom"
-                className="w-full rounded-xl border  px-4 py-2 text-black placeholder-slate-400 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/50 outline-none transition"
+                className="w-full rounded-xl border px-4 py-2"
+                value={formValue.maNhom}
                 placeholder="Nhập mã nhóm"
-                required
               />
+              <span className="text-red-500 text-sm block whitespace-pre-line">
+                {errorMess.maNhom}
+              </span>
             </div>
 
-            {/* Mô tả phim */}
+            {/* Mô tả */}
             <div className="col-span-2">
               <label className="block mb-2 text-sm font-medium text-black">
-                Mô tả phim
+                Mô tả
               </label>
               <textarea
                 onChange={handleOnchange}
-                id="moTa"
+                onBlur={handleOnblur}
                 name="moTa"
                 rows={4}
-                className="w-full rounded-xl border px-4 py-2 text-black placeholder-slate-400 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/50 outline-none transition"
+                className="w-full rounded-xl border px-4 py-2"
                 placeholder="Nhập mô tả phim"
+                value={formValue.moTa}
               />
+              <span className="text-red-500 text-sm block whitespace-pre-line">
+                {errorMess.moTa}
+              </span>
+            </div>
+
+            {/* Checkbox */}
+            <div className="col-span-2 flex gap-5">
+              <label className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  name="sapChieu"
+                  checked={formValue.sapChieu}
+                  onChange={handleOnchange}
+                />
+                Sắp chiếu
+              </label>
+
+              <label className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  name="dangChieu"
+                  checked={formValue.dangChieu}
+                  onChange={handleOnchange}
+                />
+                Đang chiếu
+              </label>
+
+              <label className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  name="hot"
+                  checked={formValue.hot}
+                  onChange={handleOnchange}
+                />
+                Hot
+              </label>
             </div>
           </div>
 
-          {/* Submit button */}
-
+          {/* Submit */}
           <button
             type="submit"
-            className="w-full mt-4 flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 px-5 py-2.5 text-white font-semibold shadow-md hover:scale-105 hover:shadow-lg transition"
+            className="w-full mt-4 rounded-xl bg-blue-600 text-white py-3 font-semibold hover:bg-blue-700 transition"
           >
             {loading ? (
-              <div role="status">
+              <div role="status" className="flex justify-center items-center">
                 <svg
                   aria-hidden="true"
                   className="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"

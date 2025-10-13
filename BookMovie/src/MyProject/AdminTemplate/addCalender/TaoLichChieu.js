@@ -1,4 +1,3 @@
-import js from "@eslint/js";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -35,13 +34,19 @@ export const CreateCalender = createAsyncThunk(
 const CalenderReducer = createSlice({
   name: "CalenderReducer",
   initialState,
-  reducers: {},
+  reducers: {
+    resetCalenderState: (state) => {
+      state.loading = true;
+      state.success = false;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(CreateCalender.pending, (state) => {
       state.loading = true;
     });
     builder.addCase(CreateCalender.fulfilled, (state, action) => {
       state.loading = false;
+      state.success = true;
       state.data = action.payload;
     });
     builder.addCase(CreateCalender.rejected, (state, action) => {

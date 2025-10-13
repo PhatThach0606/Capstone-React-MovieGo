@@ -12,7 +12,7 @@ export const renderMovie = createAsyncThunk(
   async (__, { rejectedWithValue }) => {
     try {
       const response = await axios({
-        url: `https://movienew.cybersoft.edu.vn/api/QuanLyPhim/LayDanhSachPhim?maNhom=GP01`,
+        url: `https://movienew.cybersoft.edu.vn/api/QuanLyPhim/LayDanhSachPhim?maNhom=GP06`,
         method: "GET",
 
         headers: {
