@@ -4,6 +4,7 @@ import AdminTemplate from "./MyProject/AdminTemplate";
 import AdminPage from "./MyProject/AdminTemplate/adminPage";
 import ListMovie from "./MyProject/HomeTemplate/ListMovie";
 import Homepage from "./MyProject/HomeTemplate/HomePage";
+import DetailMovie from "./MyProject/HomeTemplate/DetailMovie";
 import Authentication from "./MyProject/AdminTemplate/authentication";
 
 import AddNewFilm from "./MyProject/AdminTemplate/AddFilm";
@@ -21,6 +22,7 @@ function App() {
           <Route path="" element={<HomeTemplate />}>
             <Route path="" element={<Homepage />} />
             <Route path="list-movie" element={<ListMovie />} />
+            <Route path="detail/:id" element={<DetailMovie />} />
           </Route>
 
           {/* AdminTemplate  */}
