@@ -34,7 +34,13 @@ export const AddUserAT = createAsyncThunk(
 const AddUserReducer = createSlice({
   name: "AddUserReducer",
   initialState,
-  reducers: {},
+  reducers: {
+    resetAddUser: (state) => {
+      state.data = null;
+      state.error = null;
+      state.loading = false;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(AddUserAT.pending, (state) => {
       state.loading = true;
@@ -49,5 +55,5 @@ const AddUserReducer = createSlice({
     });
   },
 });
-
+export const { resetAddUser } = AddUserReducer.actions;
 export default AddUserReducer.reducer;

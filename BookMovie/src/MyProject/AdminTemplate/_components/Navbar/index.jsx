@@ -1,23 +1,28 @@
 import { NavLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { actionLogout } from "./../../authentication/slice";
 import { useNavigate } from "react-router-dom";
+import Sidebar from "./../Sidebar";
+
 export default function Navbar() {
   const dispatch = useDispatch();
-  const Navigate = useNavigate();
+  const navigate = useNavigate();
   const data = useSelector((state) => state.AuthenReducer.data);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   const renderUser = () => {
-    const user = JSON.parse(localStorage.getItem("ADMIN_INFOR"));
+    const user = data || JSON.parse(localStorage.getItem("ADMIN_INFOR"));
+    if (!user) return null;
+
     return (
-      <div className="text-white">
-        <div className="flex justify-center items-center gap-3">
-          <div className="flex justify-center text-white  w-10 h-10 rounded-[100%] border border-xl-white items-center">
-            <i className="fa-solid fa-user text-xl "></i>
+      <div className="text-white hidden md:flex items-center">
+        <div className="flex justify-center items-center gap-2 sm:gap-3">
+          <div className="flex justify-center items-center w-8 h-8 rounded-full border border-white">
+            <i className="fa-solid fa-user text-sm"></i>
           </div>
-          <div>
-            <div>{user?.email}</div>
+          <div className="text-sm">
+            <div>{user?.email || "User Admin"}</div>
           </div>
         </div>
       </div>
@@ -25,49 +30,64 @@ export default function Navbar() {
   };
 
   useEffect(() => {
-    if (!data) {
-      Navigate("/auth");
+    const userFromLS = localStorage.getItem("ADMIN_INFOR");
+    if (!data && !userFromLS) {
+      navigate("/auth");
     }
-  }, [data, Navigate]);
+  }, [data, navigate]);
 
   return (
-    <div>
-      <nav className=" bg-[#0F172A] ">
-        <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen p-4 px-15 border border-b-grey-600 z-10">
-          <div className="h-15 text-center  items-center leading-15">
-            <h1 className=" text-3xl font-bold text-white pt-3">
+    <>
+      {/* Navbar */}
+      <nav className="bg-[#0F172A] shadow-md sticky top-0 z-50 w-full">
+        <div className="flex justify-between items-center mx-auto lg:max-w-full  p-3 sm:p-4 lg:px-8">
+          <div className="flex items-center space-x-4 lg:pl-60 xl:pl-80 2xl:pl-80">
+            {/* Nút mở sidebar */}
+            <button
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              className="text-white focus:outline-none p-1 border rounded block md:hidden"
+              aria-label="Open Sidebar"
+            >
+              <i className="fa-solid fa-bars text-xl"></i>
+            </button>
+
+            <h1 className="text-white font-bold whitespace-nowrap text-base md:text-xl lg:text-2xl xl:text-3xl">
               Quản lý phim và Người dùng
             </h1>
           </div>
-          <div className="md:flex md *::flex-wrap md:justify-between md:items-center grid sm:grid-col-1 ">
+
+          {/* Bên phải */}
+          <div className="flex items-center space-x-2 sm:space-x-4 md:space-x-6">
             {renderUser()}
-            <div className="sm:pl-5  md:pl-10 row-span-1 pt- md:pt-0">
-              <button
-                type="button"
-                className="text-white bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+
+            {/* Nút Home */}
+            <div className="hidden sm:block">
+              <NavLink
+                to="/"
+                className="text-white bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br font-medium rounded-md text-xs sm:text-sm px-2 sm:px-4 py-1 sm:py-2  transition duration-200"
               >
-                <NavLink to="/">Home</NavLink>
-              </button>
+                Home
+              </NavLink>
             </div>
-            <div className="col-span-1  flex items-center space-x-6 rtl:space-x-reverse">
-              <a
-                href="#"
-                className="text-sm  text-blue-600 dark:text-blue-500 hover:underline"
+
+            {/* Nút Đăng xuất */}
+            <div className="flex items-center">
+              <button
+                onClick={() => {
+                  dispatch(actionLogout());
+                }}
+                type="button"
+                className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br font-medium rounded-md text-xs sm:text-sm px-2 sm:px-4 py-1 sm:py-2 transition duration-200"
               >
-                <button
-                  onClick={() => {
-                    dispatch(actionLogout());
-                  }}
-                  type="button"
-                  className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
-                >
-                  Đăng xuất
-                </button>
-              </a>
+                Đăng xuất
+              </button>
             </div>
           </div>
         </div>
       </nav>
-    </div>
+
+      {/* Sidebar responsive */}
+      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+    </>
   );
 }

@@ -5,10 +5,20 @@ import { renderMovie } from "./../adminPage/slice";
 export default function Bodymovie(props) {
   const { movie } = props;
   const dispatch = useDispatch();
-  const handleDelete = () => {
-    alert(`Bạn có muốn xóa phim ${movie.tenPhim}`);
-    dispatch(deleteMovie(movie.maPhim));
-    dispatch(renderMovie());
+  const handleDelete = async () => {
+    const isConfirm = window.confirm(
+      `Bạn có chắc muốn xóa phim "${movie.tenPhim}" không?`
+    );
+    if (!isConfirm) return;
+
+    try {
+      await dispatch(deleteMovie(movie.maPhim)).unwrap();
+      alert(`Đã xóa phim "${movie.tenPhim}" thành công!`);
+      dispatch(renderMovie());
+    } catch (error) {
+      alert("Xóa phim thất bại. Vui lòng thử lại!");
+      console.error(error);
+    }
   };
 
   return (

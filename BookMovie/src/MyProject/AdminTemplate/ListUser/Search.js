@@ -6,19 +6,19 @@ const initialState = {
   error: null,
 };
 
-export const AddFilm = createAsyncThunk(
-  "AddFilm",
-  async (formData, { rejectWithValue }) => {
+export const SearchUser = createAsyncThunk(
+  "SearchUser",
+  async (tuKhoa, { rejectWithValue }) => {
     try {
       const response = await axios({
-        url: "https://movienew.cybersoft.edu.vn/api/QuanLyPhim/ThemPhimUploadHinh",
-        method: "POST",
-        data: formData,
+        url: `https://movienew.cybersoft.edu.vn/api/QuanLyNguoiDung/TimKiemNguoiDung?MaNhom=GP06&tuKhoa=${tuKhoa}`,
+        method: "GET",
         headers: {
           TokenCybersoft:
             "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZW5Mb3AiOiJCb290Y2FtcCA4NyIsIkhldEhhblN0cmluZyI6IjIzLzAzLzIwMjYiLCJIZXRIYW5UaW1lIjoiMTc3NDIyNDAwMDAwMCIsIm5iZiI6MTc0NzI2NzIwMCwiZXhwIjoxNzc0Mzk2ODAwfQ.8AWlFkAkN_xwXppJe_FTgiJXS4WlItjxLy5olIf33HY",
         },
       });
+
       return response.data.content;
     } catch (error) {
       return rejectWithValue(error);
@@ -26,29 +26,28 @@ export const AddFilm = createAsyncThunk(
   }
 );
 
-const AddFilmReducer = createSlice({
-  name: "AddFilmReducer",
+const SearchUserReducer = createSlice({
+  name: "SearchUserReducer",
   initialState,
   reducers: {
-    resetAddFilm: (state) => {
-      state.data = null;
-      state.error = null;
+    removeUser: (state, action) => {
+      state.data = state.data.filter(
+        (user) => user.taiKhoan !== action.payload
+      );
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(AddFilm.pending, (state) => {
+    builder.addCase(SearchUser.pending, (state) => {
       state.loading = true;
     });
-    builder.addCase(AddFilm.fulfilled, (state, action) => {
+    builder.addCase(SearchUser.fulfilled, (state, action) => {
       state.loading = false;
-      state.success = true;
       state.data = action.payload;
     });
-    builder.addCase(AddFilm.rejected, (state, action) => {
+    builder.addCase(SearchUser.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload;
     });
   },
 });
-export const { resetAddFilm } = AddFilmReducer.actions;
-export default AddFilmReducer.reducer;
+export default SearchUserReducer.reducer;

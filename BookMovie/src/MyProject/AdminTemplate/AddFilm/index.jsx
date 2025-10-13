@@ -1,12 +1,11 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
-import { AddFilm } from "./slice";
+import { AddFilm, resetAddFilm } from "./slice";
 
 export default function AddNewFilm() {
   const dispatch = useDispatch();
-  const loading = useSelector((state) => state.AddFilmReducer.loading);
-  const data = useSelector((state) => state.AddFilmReducer.data);
-  const error = useSelector((state) => state.AddFilmReducer.error);
+  const { data, error, loading } = useSelector((state) => state.AddFilmReducer);
+
   console.log(error?.response?.data?.content);
   const [message, setMessage] = useState("");
 
@@ -19,6 +18,15 @@ export default function AddNewFilm() {
       return () => clearTimeout(timer);
     }
   }, [error]);
+
+  useEffect(() => {
+    if (data) {
+      setMessage("Thêm phim thành công 🎉");
+      const timer = setTimeout(() => setMessage(""), 3000);
+      dispatch(resetAddFilm());
+      return () => clearTimeout(timer);
+    }
+  }, [data]);
 
   const [formValue, setFormValue] = useState({
     maPhim: "",
@@ -179,8 +187,8 @@ export default function AddNewFilm() {
 
   // ----------------- Render -----------------
   return (
-    <div className="container mx-auto mt-10 items-center flex justify-center">
-      <div className="w-[60%]">
+    <div className="container mx-auto my-auto items-center flex justify-center min-h-screen">
+      <div className="w-[50%]">
         {message && (
           <div className="text-center mb-5 text-amber-500 font-bold text-xl">
             {message}
@@ -217,7 +225,7 @@ export default function AddNewFilm() {
                 onBlur={handleOnblur}
                 type="text"
                 name="trailer"
-                className="w-full rounded-xl border px-4 py-2"
+                className=" md:w-full rounded-xl border px-4 py-2"
                 placeholder="Nhập trailer"
                 value={formValue.trailer}
               />
