@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { renderMovie } from "./slice";
 
 import Bodymovie from "./../bodymovie";
@@ -7,6 +7,20 @@ import Bodymovie from "./../bodymovie";
 export default function AdminPage() {
   const dispatch = useDispatch();
   const data = useSelector((state) => state.AdminPageReducer.data);
+  const removeVn = (str) => {
+    return str
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/đ/g, "d")
+      .replace(/Đ/g, "D");
+  };
+  const [searchMovie, setSearchMovie] = useState("");
+  const filterMovies = data?.filter((movie) => {
+    const keyword = removeVn(searchMovie.toLowerCase());
+    const maPhim = removeVn(movie?.maPhim?.toString().toLowerCase() || "");
+    const tenPhim = removeVn(movie?.tenPhim?.toString().toLowerCase() || "");
+    return maPhim.includes(keyword) || tenPhim.includes(keyword);
+  });
 
   useEffect(() => {
     dispatch(renderMovie());
@@ -38,9 +52,19 @@ export default function AdminPage() {
         </tr>
       );
     }
-    return data?.map((movie) => {
-      return <Bodymovie key={movie.maPhim} movie={movie} />;
-    });
+    const listToRender = searchMovie ? filterMovies : data;
+
+    return listToRender.length > 0 ? (
+      listToRender.map((movie) => {
+        return <Bodymovie key={movie.maPhim} movie={movie} />;
+      })
+    ) : (
+      <tr>
+        <td colSpan={5} className="text-center py-4 text-gray-500">
+          Không tìm thấy phim nào
+        </td>
+      </tr>
+    );
   };
 
   return (
@@ -48,7 +72,7 @@ export default function AdminPage() {
       <div className=" col-span-10  mb-10 ">
         <div className="containter mx-auto px-10 grid grid-cols-1 gap-5">
           <div className="">
-            <form>
+            <form onSubmit={(e) => e.preventDefault()}>
               <div className="relative">
                 <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                   <svg
@@ -68,11 +92,11 @@ export default function AdminPage() {
                   </svg>
                 </div>
                 <input
+                  onChange={(e) => setSearchMovie(e.target.value)}
                   type="search"
                   id="search"
                   className="block w-full p-4 ps-10 text-sm text-black border-1 border-black-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 "
                   placeholder="Search"
-                  required
                 />
                 <button
                   type="submit"

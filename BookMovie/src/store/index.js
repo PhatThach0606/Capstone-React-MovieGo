@@ -11,6 +11,7 @@ import EditFilmReducer from "./../MyProject/AdminTemplate/EditPhim/slice";
 import DeleteUserReducer from "./../MyProject/AdminTemplate/User/slice";
 import EditUserReducer from "./../MyProject/AdminTemplate/EditUser/slice";
 import AddUserReducer from "./../MyProject/AdminTemplate/AddUser/slice";
+import SearchUserReducer from "./../MyProject/AdminTemplate/ListUser/Search";
 export const store = configureStore({
   reducer: {
     AuthenReducer,
@@ -25,5 +26,6 @@ export const store = configureStore({
     DeleteUserReducer,
     EditUserReducer,
     AddUserReducer,
+    SearchUserReducer,
   },
 });
