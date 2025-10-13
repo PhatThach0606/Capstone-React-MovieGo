@@ -11,10 +11,25 @@ export default function AddCalender() {
   const dispatch = useDispatch();
 
   const [maHeThonRap, setMaHeThongRap] = useState("");
-  const [danhSachRapTheoCum, setDanhSachRapTheoCum] = useState([]);
+  // const [danhSachRapTheoCum, setDanhSachRapTheoCum] = useState([]);
 
   const heThongRap = useSelector((state) => state.SystemTheaterReducer.data);
   const ListcumRap = useSelector((state) => state.GroupTheatherReducer.data);
+  const success = useSelector((state) => state.CalenderReducer.data);
+  const error = useSelector((state) => state.CalenderReducer.error);
+
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    if (success) {
+      setMessage("Tạo lịch chiếu thành công!");
+      setTimeout(() => dispatch(resetCalenderState()), 1000);
+    } else if (error) {
+      const msg = error?.response?.data?.content || "Tạo lịch chiếu thất bại!";
+      setMessage(msg);
+      setTimeout(() => dispatch(resetCalenderState()), 1000);
+    }
+  }, [success, error, dispatch]);
 
   const [dataMovie, setDataMovie] = useState({
     maPhim: movie.maPhim,
@@ -23,44 +38,27 @@ export default function AddCalender() {
     giaVe: 0,
   });
 
-  // Lấy hệ thống rạp
   useEffect(() => {
     dispatch(SystemTheater());
   }, [dispatch]);
 
-  // Khi chọn hệ thống rạp → gọi API lấy cụm rạp
   useEffect(() => {
     if (maHeThonRap) {
       dispatch(GroupTheather(maHeThonRap));
     }
   }, [dispatch, maHeThonRap]);
 
-  // Khi danh sách rạp thay đổi → cập nhật maRap (dạng JSON string)
-  useEffect(() => {
-    const maRapPhim = danhSachRapTheoCum.map((rap) => rap.maRap);
-    setDataMovie((prev) => ({
-      ...prev,
-      maRap: JSON.stringify(maRapPhim),
-    }));
-  }, [danhSachRapTheoCum]);
-
-  // chọn hệ thống rạp
   const handleTheterChange = (e) => {
     setMaHeThongRap(e.target.value);
   };
 
-  // chọn cụm rạp
   const handleGroupTheterChange = (e) => {
     const value = e.target.value;
-    const cumRapChon = ListcumRap?.find((cumRap) => cumRap.maCumRap === value);
-    if (cumRapChon) {
-      setDanhSachRapTheoCum(cumRapChon.danhSachRap);
-    } else {
-      setDanhSachRapTheoCum([]);
-    }
+    setDataMovie({
+      ...dataMovie,
+      maRap: value,
+    });
   };
-
-  // Format datetime từ input sang dd/MM/yyyy hh:mm:ss
   const formatDateTime = (isoString) => {
     if (!isoString) return "";
     const date = new Date(isoString);
@@ -91,7 +89,44 @@ export default function AddCalender() {
     }
   };
 
-  // Gửi dữ liệu tạo lịch chiếu
+  const [erroeMess, setErroMess] = useState({
+    ngayChieuGioChieu: "",
+    giaVe: "",
+  });
+
+  const hanldeOnblur = (e) => {
+    const { name, value } = e.target;
+    let message = "";
+
+    switch (name) {
+      case "ngayChieuGioChieu":
+        if (!value) {
+          message = "Vui lòng nhập ngày giờ khởi chiếu";
+        }
+
+        break;
+
+      case "giaVe":
+        if (!value) {
+          message = "Vui lòng nhập giá vé";
+        } else if (!/^\d+$/.test(value)) {
+          message = "Giá vé phải là số nguyên";
+        } else if (Number(value) < 75000 || Number(value) > 200000) {
+          message = "Giá vé phải từ 75,000 đến 200,000";
+        }
+        break;
+
+      default:
+        if (!value) message = `Vui lòng nhập ${name}`;
+        break;
+    }
+
+    setErroMess({
+      ...erroeMess,
+      [name]: message,
+    });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(CreateCalender(dataMovie));
@@ -118,14 +153,11 @@ export default function AddCalender() {
     ));
   };
 
-  console.log("🎬 Dữ liệu gửi đi:", dataMovie);
-
   return (
     <div className="mt-5 container mx-auto">
       <h1 className="text-5xl text-center font-bold">Tạo lịch Chiếu</h1>
 
       <div className="grid grid-cols-7 mt-10">
-        {/* Cột hình ảnh phim */}
         <div className="col-span-3 text-black flex justify-center items-center">
           <div>
             <img
@@ -139,10 +171,13 @@ export default function AddCalender() {
           </div>
         </div>
 
-        {/* Form tạo lịch chiếu */}
         <div className="col-span-4 max-w-3xl bg-white p-8 rounded-lg shadow-xl border border-gray-200">
           <form onSubmit={handleSubmit}>
-            {/* Hệ thống rạp */}
+            {message && (
+              <div className="text-center mb-5 text-amber-500 font-bold text-xl">
+                {message}
+              </div>
+            )}
             <div className="flex items-center mb-6">
               <label
                 htmlFor="cinema-system"
@@ -162,7 +197,6 @@ export default function AddCalender() {
               </select>
             </div>
 
-            {/* Cụm rạp */}
             <div className="flex items-center mb-6">
               <label
                 htmlFor="cinema-cluster"
@@ -172,6 +206,7 @@ export default function AddCalender() {
               </label>
               <select
                 onChange={handleGroupTheterChange}
+                name="maRap"
                 id="cinema-cluster"
                 className="flex-grow p-2 border border-gray-300 rounded-md shadow-sm 
                      focus:ring-blue-500 focus:border-blue-500 appearance-none 
@@ -182,7 +217,6 @@ export default function AddCalender() {
               </select>
             </div>
 
-            {/* Ngày chiếu giờ chiếu */}
             <div className="flex items-center mb-6">
               <label
                 htmlFor="show-date-time"
@@ -191,6 +225,7 @@ export default function AddCalender() {
                 Ngày & giờ chiếu:
               </label>
               <input
+                onBlur={hanldeOnblur}
                 onChange={handleOnchange}
                 type="datetime-local"
                 id="show-date-time"
@@ -198,9 +233,11 @@ export default function AddCalender() {
                 className="flex-grow p-2 border border-gray-300 rounded-md shadow-sm 
                     focus:ring-blue-500 focus:border-blue-500 text-gray-700 h-10"
               />
+              <span className="text-red-500 text-sm block whitespace-pre-line">
+                {erroeMess.ngayChieuGioChieu}
+              </span>
             </div>
 
-            {/* Giá vé */}
             <div className="flex items-center mb-6">
               <label
                 htmlFor="ticket-price"
@@ -209,14 +246,18 @@ export default function AddCalender() {
                 Giá vé:
               </label>
               <input
+                onBlur={hanldeOnblur}
                 onChange={handleOnchange}
                 type="number"
                 id="ticket-price"
                 name="giaVe"
                 placeholder="Nhập giá vé"
-                className="flex-grow p-2 border border-gray-300 rounded-md shadow-sm 
+                className="flex-grow p-2 block border border-gray-300 rounded-md shadow-sm 
                     focus:ring-blue-500 focus:border-blue-500 text-gray-700 h-10"
               />
+              <span className="text-red-500 text-sm block whitespace-pre-line">
+                {erroeMess.giaVe}
+              </span>
             </div>
 
             <div className="flex items-center mt-8">

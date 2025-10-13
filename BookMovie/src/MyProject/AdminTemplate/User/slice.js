@@ -1,24 +1,28 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+
 const initialState = {
   loading: false,
-  data: [],
+  data: null,
   error: null,
 };
 
-export const Management = createAsyncThunk(
-  "ManaReducer/Management",
-  async (__, { rejectWithValue }) => {
+export const deleteUser = createAsyncThunk(
+  "deleteUser",
+  async (taiKhoan, { rejectWithValue }) => {
     try {
       const response = await axios({
-        url: "https://movienew.cybersoft.edu.vn/api/QuanLyNguoiDung/LayDanhSachNguoiDung?MaNhom=GP01",
-        method: "GET",
+        url: `https://movienew.cybersoft.edu.vn/api/QuanLyNguoiDung/XoaNguoiDung?taiKhoan=${taiKhoan}`,
+        method: "DELETE",
         headers: {
+          Authorization: localStorage.getItem("ADMIN_INFOR")
+            ? "Bearer " +
+              JSON.parse(localStorage.getItem("ADMIN_INFOR")).accessToken
+            : "",
           TokenCybersoft:
             "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZW5Mb3AiOiJCb290Y2FtcCA4NyIsIkhldEhhblN0cmluZyI6IjIzLzAzLzIwMjYiLCJIZXRIYW5UaW1lIjoiMTc3NDIyNDAwMDAwMCIsIm5iZiI6MTc0NzI2NzIwMCwiZXhwIjoxNzc0Mzk2ODAwfQ.8AWlFkAkN_xwXppJe_FTgiJXS4WlItjxLy5olIf33HY",
         },
       });
-      console.log(response.data);
       return response.data.content;
     } catch (error) {
       return rejectWithValue(error);
@@ -26,22 +30,22 @@ export const Management = createAsyncThunk(
   }
 );
 
-const ManaReducer = createSlice({
-  name: "ManaReducer",
+const DeleteUserReducer = createSlice({
+  name: "DeleteUserReducer",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(Management.pending, (state) => {
+    builder.addCase(deleteUser.pending, (state) => {
       state.loading = true;
     });
-    builder.addCase(Management.fulfilled, (state, action) => {
+    builder.addCase(deleteUser.fulfilled, (state, action) => {
       state.loading = false;
       state.data = action.payload;
     });
-    builder.addCase(Management.rejected, (state, action) => {
+    builder.addCase(deleteUser.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload;
     });
   },
 });
-export default ManaReducer.reducer;
+export default DeleteUserReducer.reducer;

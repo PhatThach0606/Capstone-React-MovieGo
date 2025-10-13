@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { Management } from "./slice";
+
 import { useEffect } from "react";
 import { actionLogout } from "./../../authentication/slice";
 import { useNavigate } from "react-router-dom";
@@ -25,10 +25,6 @@ export default function Navbar() {
   };
 
   useEffect(() => {
-    dispatch(Management());
-  }, []);
-
-  useEffect(() => {
     if (!data) {
       Navigate("/auth");
     }
@@ -40,7 +36,7 @@ export default function Navbar() {
         <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen p-4 px-15 border border-b-grey-600 z-10">
           <div className="h-15 text-center  items-center leading-15">
             <h1 className=" text-3xl font-bold text-white pt-3">
-              Quản lý phim
+              Quản lý phim và Người dùng
             </h1>
           </div>
           <div className="md:flex md *::flex-wrap md:justify-between md:items-center grid sm:grid-col-1 ">

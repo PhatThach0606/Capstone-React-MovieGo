@@ -29,13 +29,19 @@ export const AddFilm = createAsyncThunk(
 const AddFilmReducer = createSlice({
   name: "AddFilmReducer",
   initialState,
-  reducers: {},
+  reducers: {
+    handleState: (state) => {
+      state.loading = true;
+      state.success = false;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(AddFilm.pending, (state) => {
       state.loading = true;
     });
     builder.addCase(AddFilm.fulfilled, (state, action) => {
       state.loading = false;
+      state.success = true;
       state.data = action.payload;
     });
     builder.addCase(AddFilm.rejected, (state, action) => {

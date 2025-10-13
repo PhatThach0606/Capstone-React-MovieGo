@@ -1,12 +1,14 @@
 import { NavLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { deleteMovie } from "./../adminPage/deletefilm";
-
+import { deleteMovie } from "../adminPage/deletefilm";
+import { renderMovie } from "./../adminPage/slice";
 export default function Bodymovie(props) {
   const { movie } = props;
   const dispatch = useDispatch();
   const handleDelete = () => {
+    alert(`Bạn có muốn xóa phim ${movie.tenPhim}`);
     dispatch(deleteMovie(movie.maPhim));
+    dispatch(renderMovie());
   };
 
   return (
@@ -21,13 +23,28 @@ export default function Bodymovie(props) {
 
       <td className="px-6 py-4">{movie.tenPhim}</td>
       <td className="px-6 py-4">{movie.biDanh}</td>
-      <td className="px-6 py-4 text-center">
-        <div className="pl-10 flex gap-2">
-          <button
-            onClick={() => handleEdit(movie.maPhim)}
-            className="text-blue-600"
-          >
-            <i className="fa-solid fa-pen-to-square"></i>
+      <td className="px-6 py-4 text-center flex justify-center items-center">
+        <div className=" flex gap-2">
+          <button className="text-blue-600">
+            <NavLink
+              to="/admin/edit"
+              state={{
+                maPhim: movie.maPhim,
+                maNhom: movie.maNhom,
+                hinhAnh: movie.hinhAnh,
+                tenPhim: movie.tenPhim,
+                moTa: movie.moTa,
+                ngayKhoiChieu: movie.ngayKhoiChieu,
+                sapChieu: movie.sapChieu,
+                dangChieu: movie.dangChieu,
+                hot: movie.hot,
+                danhGia: movie.danhGia,
+                hinhAnh: movie.hinhAnh,
+                trailer: movie.trailer,
+              }}
+            >
+              <i className="fa-solid fa-pen-to-square"></i>
+            </NavLink>
           </button>
           <button onClick={() => handleDelete()} className="text-red-600">
             <i className="fa-solid fa-trash"></i>
