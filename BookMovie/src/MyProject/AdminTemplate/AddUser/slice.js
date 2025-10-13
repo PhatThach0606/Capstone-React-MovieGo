@@ -3,17 +3,18 @@ import axios from "axios";
 
 const initialState = {
   loading: false,
-  data: null,
+  data: [],
   error: null,
 };
 
-export const deleteMovie = createAsyncThunk(
-  "deleteMovie",
-  async (maPhim, { rejectedWithValue }) => {
+export const AddUserAT = createAsyncThunk(
+  "AddUserAT",
+  async (formData, { rejectWithValue }) => {
     try {
       const response = await axios({
-        url: `https://movienew.cybersoft.edu.vn/api/QuanLyPhim/XoaPhim?MaPhim=${maPhim}`,
-        method: "DELETE",
+        url: `https://movienew.cybersoft.edu.vn/api/QuanLyNguoiDung/ThemNguoiDung`,
+        method: "POST",
+        data: formData,
         headers: {
           Authorization: localStorage.getItem("ADMIN_INFOR")
             ? "Bearer " +
@@ -25,34 +26,28 @@ export const deleteMovie = createAsyncThunk(
       });
       return response.data.content;
     } catch (error) {
-      return rejectedWithValue(error);
+      return rejectWithValue(error);
     }
   }
 );
 
-const DeleteMovieReducer = createSlice({
-  name: "DeleteMovieReducer",
+const AddUserReducer = createSlice({
+  name: "AddUserReducer",
   initialState,
-  reducers: {
-    deleteUser: (state, action) => {
-      state.data = state.data.filter(
-        (user) => user.taiKhoan !== action.payload
-      );
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(deleteMovie.pending, (state) => {
+    builder.addCase(AddUserAT.pending, (state) => {
       state.loading = true;
     });
-    builder.addCase(deleteMovie.fulfilled, (state, action) => {
+    builder.addCase(AddUserAT.fulfilled, (state, action) => {
       state.loading = false;
       state.data = action.payload;
     });
-    builder.addCase(deleteMovie.rejected, (state, action) => {
+    builder.addCase(AddUserAT.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload;
     });
   },
 });
 
-export default DeleteMovieReducer.reducer;
+export default AddUserReducer.reducer;

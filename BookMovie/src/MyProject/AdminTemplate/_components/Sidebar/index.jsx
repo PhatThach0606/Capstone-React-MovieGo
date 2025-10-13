@@ -30,9 +30,11 @@ export default function Sidebar() {
           <div className="py-4 overflow-y-auto">
             <ul className="space-y-2 font-medium">
               <li>
-                <a
-                  href="#"
-                  className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                <button
+                  type="button"
+                  className="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                  aria-controls="dropdown-example"
+                  data-collapse-toggle="dropdown-user"
                 >
                   <svg
                     className="shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
@@ -43,15 +45,50 @@ export default function Sidebar() {
                   >
                     <path d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z" />
                   </svg>
-                  <span className="flex-1 ms-3 whitespace-nowrap">User</span>
-                </a>
+                  <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">
+                    User
+                  </span>
+                  <svg
+                    className="w-3 h-3"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 10 6"
+                  >
+                    <path
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="m1 1 4 4 4-4"
+                    />
+                  </svg>
+                </button>
+                <ul id="dropdown-user" className="hidden py-2 space-y-2">
+                  <li>
+                    <NavLink
+                      to="/admin/add-user"
+                      className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                    >
+                      Thêm người dùng
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink
+                      to="/admin/list-user"
+                      className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                    >
+                      Danh sách người dùng
+                    </NavLink>
+                  </li>
+                </ul>
               </li>
               <li>
                 <button
                   type="button"
                   className="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
                   aria-controls="dropdown-example"
-                  data-collapse-toggle="dropdown-example"
+                  data-collapse-toggle="dropdown-movie"
                 >
                   <svg
                     className="shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
@@ -81,7 +118,7 @@ export default function Sidebar() {
                     />
                   </svg>
                 </button>
-                <ul id="dropdown-example" className="hidden py-2 space-y-2">
+                <ul id="dropdown-movie" className="hidden py-2 space-y-2">
                   <li>
                     <NavLink
                       to="/admin/adminpage"
@@ -99,32 +136,6 @@ export default function Sidebar() {
                     </NavLink>
                   </li>
                 </ul>
-              </li>
-
-              <li>
-                <NavLink
-                  to="/admin/calender"
-                  className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="size-6"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M6.75 2.994v2.25m10.5-2.25v2.25m-14.252 13.5V7.491a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v11.251m-18 0a2.25 2.25 0 0 0 2.25 2.25h13.5a2.25 2.25 0 0 0 2.25-2.25m-18 0v-7.5a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v7.5m-6.75-6h2.25m-9 2.25h4.5m.002-2.25h.005v.006H12v-.006Zm-.001 4.5h.006v.006h-.006v-.005Zm-2.25.001h.005v.006H9.75v-.006Zm-2.25 0h.005v.005h-.006v-.005Zm6.75-2.247h.005v.005h-.005v-.005Zm0 2.247h.006v.006h-.006v-.006Zm2.25-2.248h.006V15H16.5v-.005Z"
-                    />
-                  </svg>
-
-                  <span className="flex-1 ms-3 whitespace-nowrap">
-                    Lịch chiếu
-                  </span>
-                </NavLink>
               </li>
             </ul>
           </div>
