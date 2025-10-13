@@ -2,9 +2,10 @@ import { NavLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { deleteMovie } from "../adminPage/deletefilm";
 import { renderMovie } from "./../adminPage/slice";
-export default function Bodymovie(props) {
-  const { movie } = props;
+
+export default function Bodymovie({ movie }) {
   const dispatch = useDispatch();
+
   const handleDelete = async () => {
     const isConfirm = window.confirm(
       `Bạn có chắc muốn xóa phim "${movie.tenPhim}" không?`
@@ -23,55 +24,46 @@ export default function Bodymovie(props) {
 
   return (
     <tr className="odd:bg-white even:bg-gray-50 border-b border-gray-200 hover:bg-blue-50 transition">
-      <td className="px-6 py-4">{movie.maPhim}</td>
-      <td
-        scope="row"
-        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-      >
-        <img className="w-10 h-10" src={movie.hinhAnh} alt="" />
+      <td className="px-4 sm:px-6 py-3 sm:py-4">{movie.maPhim}</td>
+      <td className="px-4 sm:px-6 py-3 sm:py-4">
+        <img
+          className="w-10 h-10 sm:w-12 sm:h-12 rounded object-cover"
+          src={movie.hinhAnh}
+          alt={movie.tenPhim}
+        />
       </td>
+      <td className="px-4 sm:px-6 py-3 sm:py-4 font-medium">{movie.tenPhim}</td>
+      <td className="hidden sm:table-cell px-4 sm:px-6 py-3 sm:py-4 text-gray-600">
+        {movie.biDanh}
+      </td>
+      <td className="px-4 sm:px-6 py-3 sm:py-4 text-center">
+        <div className="flex justify-center gap-3 text-lg">
+          <NavLink
+            to="/admin/edit"
+            state={movie}
+            className="text-blue-600 hover:text-blue-800"
+          >
+            <i className="fa-solid fa-pen-to-square"></i>
+          </NavLink>
 
-      <td className="px-6 py-4">{movie.tenPhim}</td>
-      <td className="px-6 py-4">{movie.biDanh}</td>
-      <td className="px-6 py-4 text-center flex justify-center items-center">
-        <div className=" flex gap-2">
-          <button className="text-blue-600">
-            <NavLink
-              to="/admin/edit"
-              state={{
-                maPhim: movie.maPhim,
-                maNhom: movie.maNhom,
-                hinhAnh: movie.hinhAnh,
-                tenPhim: movie.tenPhim,
-                moTa: movie.moTa,
-                ngayKhoiChieu: movie.ngayKhoiChieu,
-                sapChieu: movie.sapChieu,
-                dangChieu: movie.dangChieu,
-                hot: movie.hot,
-                danhGia: movie.danhGia,
-                hinhAnh: movie.hinhAnh,
-                trailer: movie.trailer,
-              }}
-            >
-              <i className="fa-solid fa-pen-to-square"></i>
-            </NavLink>
-          </button>
-          <button onClick={() => handleDelete()} className="text-red-600">
+          <button
+            onClick={handleDelete}
+            className="text-red-600 hover:text-red-800"
+          >
             <i className="fa-solid fa-trash"></i>
           </button>
-          <button>
-            <NavLink
-              to="/admin/addcalender"
-              state={{
-                maPhim: movie.maPhim,
-                hinhAnh: movie.hinhAnh,
-                tenPhim: movie.tenPhim,
-              }}
-              className="text-green-400"
-            >
-              <i className="fa-solid fa-calendar"></i>
-            </NavLink>
-          </button>
+
+          <NavLink
+            to="/admin/addcalender"
+            state={{
+              maPhim: movie.maPhim,
+              hinhAnh: movie.hinhAnh,
+              tenPhim: movie.tenPhim,
+            }}
+            className="text-green-500 hover:text-green-700"
+          >
+            <i className="fa-solid fa-calendar"></i>
+          </NavLink>
         </div>
       </td>
     </tr>

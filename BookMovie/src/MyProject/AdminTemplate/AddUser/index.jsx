@@ -119,43 +119,43 @@ export default function AddUser() {
   }, [data, loading, error]);
 
   return (
-    <div className="mt-10">
-      <h1 className="text-center font-bold text-3xl">Thêm người dùng</h1>
+    <div className="mt-10 px-4">
+      <h1 className="text-center font-bold text-3xl sm:text-4xl mb-8">
+        Thêm người dùng
+      </h1>
 
-      <div className="container mx-auto mt-10 flex justify-center">
-        <div className="w-[40%]">
+      <div className="container mx-auto flex justify-center">
+        <div className="w-full sm:w-3/4 md:w-2/3 lg:w-1/2">
           {errormessage && (
-            <div className="flex justify-center items-center">
-              <div className="bg-red-200 rounded px-5">
-                <h3 className="my-5 text-red-600 font-semibold">
-                  {errormessage}
-                </h3>
+            <div className="flex justify-center items-center mb-4">
+              <div className="bg-red-200 rounded px-5 py-2 w-full text-center">
+                <h3 className="text-red-600 font-semibold">{errormessage}</h3>
               </div>
             </div>
           )}
+
           <form onSubmit={handleSubmit} className="text-black">
-            <div className="grid gap-4 mb-4 grid-cols-2">
-              <div className="col-span-2">
-                <label className="block mb-2 text-sm font-medium text-black">
-                  Tài Khoản
-                </label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Tài khoản */}
+              <div className="flex flex-col">
+                <label className="mb-2 text-sm font-medium">Tài Khoản</label>
                 <input
                   onChange={handleOnchange}
                   onBlur={hanldeOnblur}
                   type="text"
                   name="taiKhoan"
-                  className="w-full rounded-xl border px-4 py-2 "
+                  className="w-full rounded-xl border px-4 py-2"
                   placeholder="Nhập tài khoản"
                   required
                 />
-                <span className="text-red-500 text-sm block whitespace-pre-line">
+                <span className="text-red-500 text-sm mt-1 whitespace-pre-line">
                   {erroeMess.taiKhoan}
                 </span>
               </div>
-              <div className="col-span-1">
-                <label className="block mb-2 text-sm font-medium text-black">
-                  Mật khẩu
-                </label>
+
+              {/* Mật khẩu */}
+              <div className="flex flex-col">
+                <label className="mb-2 text-sm font-medium">Mật khẩu</label>
                 <input
                   onChange={handleOnchange}
                   onBlur={hanldeOnblur}
@@ -164,28 +164,30 @@ export default function AddUser() {
                   className="w-full rounded-xl border px-4 py-2"
                   placeholder="Nhập mật khẩu"
                 />
-                <span className="text-red-500 text-sm block whitespace-pre-line">
+                <span className="text-red-500 text-sm mt-1 whitespace-pre-line">
                   {erroeMess.matKhau}
                 </span>
               </div>
-              <div className="col-span-1">
-                <label className="block mb-2 text-sm font-medium text-black">
-                  Email
-                </label>
+
+              {/* Email */}
+              <div className="flex flex-col">
+                <label className="mb-2 text-sm font-medium">Email</label>
                 <input
                   onChange={handleOnchange}
                   onBlur={hanldeOnblur}
                   type="email"
                   name="email"
-                  className="block w-full text-sm border rounded-lg cursor-pointer"
+                  className="w-full rounded-xl border px-4 py-2"
                   placeholder="Nhập Email"
                 />
-                <span className="text-red-500 text-sm block whitespace-pre-line">
+                <span className="text-red-500 text-sm mt-1 whitespace-pre-line">
                   {erroeMess.email}
                 </span>
               </div>
-              <div className="col-span-1">
-                <label className="block mb-2 text-sm font-medium text-black">
+
+              {/* Số điện thoại */}
+              <div className="flex flex-col">
+                <label className="mb-2 text-sm font-medium">
                   Số điện thoại
                 </label>
                 <input
@@ -196,28 +198,30 @@ export default function AddUser() {
                   className="w-full rounded-xl border px-4 py-2"
                   placeholder="Nhập số điện thoại"
                 />
-                <span className="text-red-500 text-sm block whitespace-pre-line">
+                <span className="text-red-500 text-sm mt-1 whitespace-pre-line">
                   {erroeMess.soDt}
                 </span>
               </div>
-              <div className="col-span-1">
-                <label className="block mb-2 text-sm font-medium text-black">
-                  Mã nhóm
-                </label>
+
+              {/* Mã nhóm */}
+              <div className="flex flex-col">
+                <label className="mb-2 text-sm font-medium">Mã nhóm</label>
                 <input
                   onChange={handleOnchange}
                   onBlur={hanldeOnblur}
                   type="text"
                   name="maNhom"
-                  className="w-full rounded-xl border px-4 py-2 "
+                  className="w-full rounded-xl border px-4 py-2"
                   placeholder="Nhập mã nhóm"
                 />
-                <span className="text-red-500 text-sm block whitespace-pre-line">
+                <span className="text-red-500 text-sm mt-1 whitespace-pre-line">
                   {erroeMess.maNhom}
                 </span>
               </div>
-              <div className="col-span-1">
-                <label className="block mb-2 text-sm font-medium text-black">
+
+              {/* Mã loại người dùng */}
+              <div className="flex flex-col">
+                <label className="mb-2 text-sm font-medium">
                   Mã loại đối tượng
                 </label>
                 <input
@@ -228,14 +232,14 @@ export default function AddUser() {
                   className="w-full rounded-xl border px-4 py-2"
                   placeholder="Nhập mã loại đối tượng"
                 />
-                <span className="text-red-500 text-sm block whitespace-pre-line">
+                <span className="text-red-500 text-sm mt-1 whitespace-pre-line">
                   {erroeMess.maLoaiNguoiDung}
                 </span>
               </div>
-              <div className="col-span-1">
-                <label className="block mb-2 text-sm font-medium text-black">
-                  Họ tên
-                </label>
+
+              {/* Họ tên */}
+              <div className="flex flex-col">
+                <label className="mb-2 text-sm font-medium">Họ tên</label>
                 <input
                   onChange={handleOnchange}
                   onBlur={hanldeOnblur}
@@ -244,17 +248,18 @@ export default function AddUser() {
                   className="w-full rounded-xl border px-4 py-2"
                   placeholder="Nhập họ tên"
                 />
-                <span className="text-red-500 text-sm block whitespace-pre-line">
+                <span className="text-red-500 text-sm mt-1 whitespace-pre-line">
                   {erroeMess.hoTen}
                 </span>
               </div>
             </div>
 
+            {/* Submit button */}
             <button
               type="submit"
-              className="w-full mt-4 rounded-xl bg-amber-700 text-white py-3 font-semibold hover:bg-amber-900 transition"
+              className="w-full mt-6 rounded-xl bg-amber-700 text-white py-3 font-semibold hover:bg-amber-900 transition"
             >
-              {loading ? "Đang thêm người dùng..." : "+Thêm Người dùng"}
+              {loading ? "Đang thêm người dùng..." : "+ Thêm Người dùng"}
             </button>
           </form>
         </div>

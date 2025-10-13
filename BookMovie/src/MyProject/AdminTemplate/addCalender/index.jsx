@@ -11,7 +11,6 @@ export default function AddCalender() {
   const dispatch = useDispatch();
 
   const [maHeThonRap, setMaHeThongRap] = useState("");
-  // const [danhSachRapTheoCum, setDanhSachRapTheoCum] = useState([]);
 
   const heThongRap = useSelector((state) => state.SystemTheaterReducer.data);
   const ListcumRap = useSelector((state) => state.GroupTheatherReducer.data);
@@ -154,53 +153,58 @@ export default function AddCalender() {
   };
 
   return (
-    <div className="mt-5 container mx-auto">
-      <h1 className="text-5xl text-center font-bold">Tạo lịch Chiếu</h1>
+    <div className="mt-5 container mx-auto px-4">
+      <h1 className="text-3xl sm:text-4xl md:text-5xl text-center font-bold mb-6">
+        Tạo lịch Chiếu
+      </h1>
 
-      <div className="grid grid-cols-7 mt-10">
-        <div className="col-span-3 text-black flex justify-center items-center">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-6">
+        {/* Phần ảnh phim */}
+        <div className="lg:col-span-3 flex justify-center items-center">
           <div>
             <img
-              className="w-[350px] h-[450px] rounded-lg shadow-md"
+              className="w-full sm:w-[250px] md:w-[300px] lg:w-[350px] h-[350px] sm:h-[400px] md:h-[450px] lg:h-[450px] rounded-lg shadow-md object-cover"
               src={movie.hinhAnh}
               alt={movie.tenPhim}
             />
-            <h4 className="text-xl font-bold text-center pt-5">
+            <h4 className="text-lg sm:text-xl md:text-2xl font-bold text-center pt-4">
               {movie.tenPhim}
             </h4>
           </div>
         </div>
 
-        <div className="col-span-4 max-w-3xl bg-white p-8 rounded-lg shadow-xl border border-gray-200">
+        {/* Form */}
+        <div className="lg:col-span-4 bg-white p-6 sm:p-8 rounded-lg shadow-xl border border-gray-200">
           <form onSubmit={handleSubmit}>
             {message && (
-              <div className="text-center mb-5 text-amber-500 font-bold text-xl">
+              <div className="text-center mb-5 text-amber-500 font-bold text-lg sm:text-xl">
                 {message}
               </div>
             )}
-            <div className="flex items-center mb-6">
+
+            {/* Hệ thống rạp */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center mb-4 sm:mb-6">
               <label
                 htmlFor="cinema-system"
-                className="w-40 flex-shrink-0 text-gray-600 font-medium"
+                className="w-full sm:w-40 text-gray-600 font-medium mb-2 sm:mb-0"
               >
                 Hệ thống rạp:
               </label>
               <select
                 onChange={handleTheterChange}
                 id="cinema-system"
-                className="flex-grow p-2 border border-gray-300 rounded-md shadow-sm 
-                     focus:ring-blue-500 focus:border-blue-500 appearance-none 
-                     bg-white text-gray-700 h-10 cursor-pointer"
+                className="flex-grow p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-700 h-10"
               >
                 <option>Chọn hệ thống rạp</option>
                 {renderSystemTheater()}
               </select>
             </div>
 
-            <div className="flex items-center mb-6">
+            {/* Cụm rạp */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center mb-4 sm:mb-6">
               <label
                 htmlFor="cinema-cluster"
-                className="w-40 flex-shrink-0 text-gray-600 font-medium"
+                className="w-full sm:w-40 text-gray-600 font-medium mb-2 sm:mb-0"
               >
                 Cụm rạp:
               </label>
@@ -208,66 +212,68 @@ export default function AddCalender() {
                 onChange={handleGroupTheterChange}
                 name="maRap"
                 id="cinema-cluster"
-                className="flex-grow p-2 border border-gray-300 rounded-md shadow-sm 
-                     focus:ring-blue-500 focus:border-blue-500 appearance-none 
-                     bg-white text-gray-700 h-10 cursor-pointer"
+                className="flex-grow p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-700 h-10"
               >
                 <option>Chọn cụm rạp</option>
                 {renderGroupTheater()}
               </select>
             </div>
 
-            <div className="flex items-center mb-6">
+            {/* Ngày giờ chiếu */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center mb-4 sm:mb-6">
               <label
                 htmlFor="show-date-time"
-                className="w-40 flex-shrink-0 text-gray-600 font-medium"
+                className="w-full sm:w-40 text-gray-600 font-medium mb-2 sm:mb-0"
               >
                 Ngày & giờ chiếu:
               </label>
-              <input
-                onBlur={hanldeOnblur}
-                onChange={handleOnchange}
-                type="datetime-local"
-                id="show-date-time"
-                name="ngayChieuGioChieu"
-                className="flex-grow p-2 border border-gray-300 rounded-md shadow-sm 
-                    focus:ring-blue-500 focus:border-blue-500 text-gray-700 h-10"
-              />
-              <span className="text-red-500 text-sm block whitespace-pre-line">
-                {erroeMess.ngayChieuGioChieu}
-              </span>
+              <div className="ml-7 flex flex-col w-full sm:flex-row sm:items-center sm:space-x-4">
+                <input
+                  onBlur={hanldeOnblur}
+                  onChange={handleOnchange}
+                  type="datetime-local"
+                  id="show-date-time"
+                  name="ngayChieuGioChieu"
+                  className="flex-grow p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-gray-700 h-10"
+                />
+                <span className="text-red-500 text-sm mt-1 sm:mt-0">
+                  {erroeMess.ngayChieuGioChieu}
+                </span>
+              </div>
             </div>
 
-            <div className="flex items-center mb-6">
+            {/* Giá vé */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center mb-4 sm:mb-6">
               <label
                 htmlFor="ticket-price"
-                className="w-40 flex-shrink-0 text-gray-600 font-medium"
+                className="w-full sm:w-40 text-gray-600 font-medium mb-2 sm:mb-0"
               >
                 Giá vé:
               </label>
-              <input
-                onBlur={hanldeOnblur}
-                onChange={handleOnchange}
-                type="number"
-                id="ticket-price"
-                name="giaVe"
-                placeholder="Nhập giá vé"
-                className="flex-grow p-2 block border border-gray-300 rounded-md shadow-sm 
-                    focus:ring-blue-500 focus:border-blue-500 text-gray-700 h-10"
-              />
-              <span className="text-red-500 text-sm block whitespace-pre-line">
-                {erroeMess.giaVe}
-              </span>
+              <div className=" ml-7 flex flex-col w-full sm:flex-row sm:items-center sm:space-x-4 ">
+                <input
+                  onBlur={hanldeOnblur}
+                  onChange={handleOnchange}
+                  type="number"
+                  id="ticket-price"
+                  name="giaVe"
+                  placeholder="Nhập giá vé"
+                  className="flex-grow p-2 block border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-gray-700 h-10"
+                />
+                <span className="text-red-500 text-sm mt-1 sm:mt-0">
+                  {erroeMess.giaVe}
+                </span>
+              </div>
             </div>
 
-            <div className="flex items-center mt-8">
-              <label className="w-40 flex-shrink-0 text-gray-600 font-medium">
+            {/* Submit */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center mt-6">
+              <label className="w-full sm:w-40 text-gray-600 font-medium mb-2 sm:mb-0">
                 Chức năng:
               </label>
               <button
                 type="submit"
-                className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-md 
-                     shadow-md transition duration-150 ease-in-out"
+                className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-md shadow-md transition duration-150 ease-in-out w-full sm:w-auto"
               >
                 Tạo lịch chiếu
               </button>
