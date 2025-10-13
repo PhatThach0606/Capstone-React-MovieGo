@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-// import api from "./../../../services/apiService";
 import api from "@/services/apiService";
 
 const initialState = {
@@ -12,7 +11,7 @@ export const fetchData = createAsyncThunk(
   "fetchData",
   async (__, { rejectWithValue }) => {
     try {
-      const response = await api.get("QuanLyPhim/LayDanhSachPhim?maNhom=GP01");
+      const response = await api.get("QuanLyPhim/LayDanhSachPhim?maNhom=GP06");
 
       return response.data.content;
     } catch (error) {
