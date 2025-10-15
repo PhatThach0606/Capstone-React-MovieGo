@@ -84,7 +84,7 @@ export default function ListUser() {
   };
 
   return (
-    <div className="container mx-auto my-10 px-10">
+    <div className="p-4 sm:p-6 bg-gray-100 min-h-screen">
       <h1 className="text-center font-bold mb-8 text-2xl text-amber-600">
         Danh sách người dùng
       </h1>
@@ -122,8 +122,8 @@ export default function ListUser() {
       </div>
 
       {/* 🔹 Bảng danh sách */}
-      <div className="relative overflow-x-auto overflow-y-auto shadow-md sm:rounded-xl max-h-[600px]">
-        <table className="min-w-full text-sm text-left text-gray-700 border border-gray-200">
+      <div className="relative xl:overflow-x-auto overflow-y-auto shadow-md rounded-xl max-h-[600px]">
+        <table className="min-w-full text-sm text-left text-gray-700 border border-gray-200 ">
           <thead className="sticky top-0 z-10 text-xs uppercase bg-gradient-to-r from-red-800 to-black text-white">
             <tr>
               <th className="px-4 sm:px-6 py-3">Tài Khoản</th>
