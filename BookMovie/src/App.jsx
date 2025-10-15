@@ -9,7 +9,7 @@ import SignUp from "./MyProject/HomeTemplate/SignUp";
 import SignIn from "./MyProject/HomeTemplate/SignIn";
 import BookTicket from "./MyProject/HomeTemplate/BookTicket";
 import Authentication from "./MyProject/AdminTemplate/authentication";
-
+import ShowTime from "./MyProject/HomeTemplate/ShowTime";
 import AddNewFilm from "./MyProject/AdminTemplate/AddFilm";
 import AddCalender from "./MyProject/AdminTemplate/addCalender";
 import EditFilm from "./MyProject/AdminTemplate/EditPhim";
@@ -29,11 +29,11 @@ function App() {
             <Route path="sign-in" element={<SignIn />} />
             <Route path="book-ticket/:id" element={<BookTicket />} />
             <Route path="detail/:id" element={<DetailMovie />} />
+            <Route path="showtime" element={<ShowTime />} />
           </Route>
 
           {/* AdminTemplate  */}
           <Route path="admin" element={<AdminTemplate />}>
-
             <Route path="adminpage" element={<AdminPage />} />
             <Route path="addfilm" element={<AddNewFilm />} />
             <Route path="addcalender" element={<AddCalender />} />
@@ -41,9 +41,6 @@ function App() {
             <Route path="list-user" element={<ListUser />} />
             <Route path="add-user" element={<AddUser />} />
             <Route path="edit-user" element={<EditUser />} />
-
-        
-
           </Route>
           {/* Authen  */}
           <Route path="auth" element={<Authentication />} />
