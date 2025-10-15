@@ -5,6 +5,9 @@ import AdminPage from "./MyProject/AdminTemplate/adminPage";
 import ListMovie from "./MyProject/HomeTemplate/ListMovie";
 import Homepage from "./MyProject/HomeTemplate/HomePage";
 import DetailMovie from "./MyProject/HomeTemplate/DetailMovie";
+import SignUp from "./MyProject/HomeTemplate/SignUp";
+import SignIn from "./MyProject/HomeTemplate/SignIn";
+import BookTicket from "./MyProject/HomeTemplate/BookTicket";
 import Authentication from "./MyProject/AdminTemplate/authentication";
 
 import AddNewFilm from "./MyProject/AdminTemplate/AddFilm";
@@ -22,6 +25,9 @@ function App() {
           <Route path="" element={<HomeTemplate />}>
             <Route path="" element={<Homepage />} />
             <Route path="list-movie" element={<ListMovie />} />
+            <Route path="sign-up" element={<SignUp />} />
+            <Route path="sign-in" element={<SignIn />} />
+            <Route path="book-ticket/:id" element={<BookTicket />} />
             <Route path="detail/:id" element={<DetailMovie />} />
           </Route>
 

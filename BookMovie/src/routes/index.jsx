@@ -2,6 +2,8 @@ import HomeTemplate from "../MyProject/HomeTemplate";
 import DetailMovie from "../MyProject/HomeTemplate/DetailMovie";
 import Homepage from "../MyProject/HomeTemplate/HomePage";
 import ListMovie from "../MyProject/HomeTemplate/ListMovie";
+import SignUp from "../MyProject/HomeTemplate/SignUp";
+import BookTicket from "../MyProject/HomeTemplate/BookTicket";
 import AdminTemplate from "../MyProject/AdminTemplate";
 import Dashboard from "../MyProject/AdminTemplate/Dashboard";
 import Adminpage from "../MyProject/AdminTemplate/AdminPage";
@@ -15,7 +17,9 @@ export const routes = [
     nested: [
       { path: "", element: Homepage },
       { path: "list-movie", element: ListMovie },
+      { path: "sign-up", element: SignUp, hiddenNav: true },
       { path: "detail/:id", element: DetailMovie, hiddenNav: true },
+      // { path: "book-ticket/:id", element: BookTicket, hiddenNav: true },
     ],
   },
 

@@ -13,6 +13,10 @@ import EditFilmReducer from "./../MyProject/AdminTemplate/EditPhim/slice";
 import DeleteUserReducer from "./../MyProject/AdminTemplate/User/slice";
 import EditUserReducer from "./../MyProject/AdminTemplate/EditUser/slice";
 import AddUserReducer from "./../MyProject/AdminTemplate/AddUser/slice";
+import SignUpReducer from "./../MyProject/HomeTemplate/SignUp/slice";
+import SignInReducer from "./../MyProject/HomeTemplate/SignIn/slice";
+import { bookTicketReducer } from "./../MyProject/HomeTemplate/BookTicket/slice";
+// import { BookTicketReducer } from "../MyProject/HomeTemplate/BookTicket/slice";
 export const store = configureStore({
   reducer: {
     AuthenReducer,
@@ -29,5 +33,9 @@ export const store = configureStore({
     DeleteUserReducer,
     EditUserReducer,
     AddUserReducer,
+    SignUpReducer,
+    SignInReducer,
+    bookTicketReducer,
+    // BookTicketReducer,
   },
 });

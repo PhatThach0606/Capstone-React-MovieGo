@@ -1,5 +1,22 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 export default function Navbar() {
+  const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("user"));
+
+  useEffect(() => {
+    const onStorage = () => setIsLoggedIn(!!localStorage.getItem("user"));
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, []);
+
+  const handleLogout = () => {
+    try {
+      localStorage.removeItem("user");
+    } catch (_) {}
+    setIsLoggedIn(false);
+    navigate("/");
+  };
   return (
     <div>
       <nav className="  bg-[#0F172A]">
@@ -78,6 +95,30 @@ export default function Navbar() {
               >
                 <NavLink to="auth">Admin</NavLink>
               </button>
+              {!isLoggedIn ? (
+                <>
+                  <button
+                    type="button"
+                    className="text-white bg-gradient-to-r from-sky-400 via-sky-500 to-sky-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-sky-300 dark:focus:ring-sky-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                  >
+                    <NavLink to="sign-in">Đăng nhập</NavLink>
+                  </button>
+                  <button
+                    type="button"
+                    className="text-white bg-gradient-to-r from-rose-400 via-rose-500 to-rose-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-rose-300 dark:focus:ring-rose-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2"
+                  >
+                    <NavLink to="sign-up">Đăng ký</NavLink>
+                  </button>
+                </>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="text-white bg-gradient-to-r from-gray-500 via-gray-600 to-gray-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-gray-300 dark:focus:ring-gray-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2"
+                >
+                  Log Out
+                </button>
+              )}
             </div>
           </div>
           <div
