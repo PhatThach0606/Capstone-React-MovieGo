@@ -59,6 +59,8 @@ export default function DetailMovie() {
     );
   }
 
+  
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
@@ -334,6 +336,11 @@ export default function DetailMovie() {
                           : "bg-gray-400 text-white cursor-not-allowed"
                       }`}
                       disabled={!movie.dangChieu}
+                      onClick={() => {
+                        if (!movie.dangChieu) return;
+                        const maLichChieu = movie?.lichChieu?.[0]?.maLichChieu || id;
+                        window.location.href = `/book-ticket/${maLichChieu}`;
+                      }}
                     >
                       <svg
                         className="w-4 h-4 mr-2"
