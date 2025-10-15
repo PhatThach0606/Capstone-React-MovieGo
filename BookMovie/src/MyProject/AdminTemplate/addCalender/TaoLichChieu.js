@@ -37,7 +37,7 @@ const CalenderReducer = createSlice({
   reducers: {
     resetCalenderState: (state) => {
       state.loading = true;
-      state.success = false;
+      state.data = null;
     },
   },
   extraReducers: (builder) => {
@@ -55,5 +55,5 @@ const CalenderReducer = createSlice({
     });
   },
 });
-
+export const { resetCalenderState } = CalenderReducer.actions;
 export default CalenderReducer.reducer;

@@ -26,7 +26,8 @@ export default function BookTicket() {
     });
   };
 
-  if (loading) return <div className="text-center py-10">Đang tải phòng vé...</div>;
+  if (loading)
+    return <div className="text-center py-10">Đang tải phòng vé...</div>;
   if (error)
     return (
       <div className="text-center py-10 text-red-600">
@@ -37,7 +38,7 @@ export default function BookTicket() {
   const isLoggedIn = !!localStorage.getItem("user");
 
   return (
-    <div className="container mx-auto px-4 py-6">
+    <div className="container mx-auto px-4 py-6 ">
       <div className="mb-4">
         <button
           className="px-4 py-2 rounded-lg border"
@@ -52,7 +53,8 @@ export default function BookTicket() {
       <div className="grid grid-cols-10 gap-2 bg-slate-900 p-4 rounded-lg max-w-5xl">
         {seats.map((seat) => {
           const isSelected = selectedSeats.some((s) => s.maGhe === seat.maGhe);
-          const base = "text-xs md:text-sm px-2 py-2 rounded-md text-white text-center";
+          const base =
+            "text-xs md:text-sm px-2 py-2 rounded-md text-white text-center";
           const cls = seat.daDat
             ? "bg-gray-500 cursor-not-allowed"
             : isSelected
@@ -77,7 +79,10 @@ export default function BookTicket() {
         <div className="flex flex-wrap gap-2">
           {selectedSeats.length === 0 && <span>Chưa chọn ghế</span>}
           {selectedSeats.map((s) => (
-            <span key={s.maGhe} className="px-2 py-1 rounded bg-rose-100 text-rose-700 text-sm">
+            <span
+              key={s.maGhe}
+              className="px-2 py-1 rounded bg-rose-100 text-rose-700 text-sm"
+            >
               {s.tenGhe}
             </span>
           ))}
@@ -95,7 +100,9 @@ export default function BookTicket() {
               navigate("/sign-in");
               return;
             }
-            alert("Đặt vé demo: " + selectedSeats.map((s) => s.tenGhe).join(", "));
+            alert(
+              "Đặt vé demo: " + selectedSeats.map((s) => s.tenGhe).join(", ")
+            );
           }}
         >
           Đặt vé
@@ -104,4 +111,3 @@ export default function BookTicket() {
     </div>
   );
 }
-

@@ -33,13 +33,7 @@ export const deleteMovie = createAsyncThunk(
 const DeleteMovieReducer = createSlice({
   name: "DeleteMovieReducer",
   initialState,
-  reducers: {
-    deleteUser: (state, action) => {
-      state.data = state.data.filter(
-        (user) => user.taiKhoan !== action.payload
-      );
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder.addCase(deleteMovie.pending, (state) => {
       state.loading = true;

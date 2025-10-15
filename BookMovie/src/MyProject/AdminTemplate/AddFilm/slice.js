@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 const initialState = {
   loading: false,
-  data: [],
+  data: null,
   error: null,
 };
 
@@ -30,9 +30,9 @@ const AddFilmReducer = createSlice({
   name: "AddFilmReducer",
   initialState,
   reducers: {
-    handleState: (state) => {
-      state.loading = true;
-      state.success = false;
+    resetAddFilm: (state) => {
+      state.data = null;
+      state.error = null;
     },
   },
   extraReducers: (builder) => {
@@ -50,4 +50,5 @@ const AddFilmReducer = createSlice({
     });
   },
 });
+export const { resetAddFilm } = AddFilmReducer.actions;
 export default AddFilmReducer.reducer;
