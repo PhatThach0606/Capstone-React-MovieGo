@@ -34,6 +34,13 @@ export default function EditUser() {
       });
     }
   }, [user]);
+  const [hasSubmitted, setHasSubmitted] = useState(false);
+  useEffect(() => {
+    if (hasSubmitted && !loading && data && !error) {
+      alert("Cập nhật thành công");
+      setHasSubmitted(false);
+    }
+  }, [data, loading, error, hasSubmitted]);
 
   const handleOnchange = (e) => {
     const { name, value } = e.target;
@@ -61,8 +68,12 @@ export default function EditUser() {
         break;
       case "matKhau":
         if (!value) message = "Vui lòng nhập mật khẩu";
-        else if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/.test(value))
-          message = "Mật khẩu phải ít nhất 6 ký tự, bao gồm chữ và số";
+        else if (
+          !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d])[A-Za-z\d@$!%*?&^#%+=_()-]{6,}$/.test(
+            value
+          )
+        )
+          message = `Mật khẩu phải ít nhất 6 ký tự, bao gồm Ít nhất:\n 1 Chữ cái in Hoa\n 1 Số\n 1 Ký tự đặc biệt`;
         break;
       case "email":
         if (!value) message = "Vui lòng nhập Email";
@@ -87,8 +98,8 @@ export default function EditUser() {
         break;
       case "hoTen":
         if (!value) message = "Vui lòng nhập họ tên";
-        else if (!/^[a-zA-Z\s]+$/.test(value))
-          message = "Họ tên chỉ được chứa chữ cái và khoảng trắng";
+        else if (!/^[\p{L}\s]+$/u.test(value))
+          message = "Họ tên chỉ được chứa chữ cái (có dấu) và khoảng trắng";
         break;
       default:
         break;
@@ -99,6 +110,7 @@ export default function EditUser() {
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(EditUserAST(formValue));
+    setHasSubmitted(true);
   };
 
   return (
@@ -108,7 +120,7 @@ export default function EditUser() {
           Chỉnh sửa Người dùng
         </h1>
 
-        <form onSubmit={handleSubmit} className="text-black">
+        <form id="idEdit" onSubmit={handleSubmit} className="text-black">
           <div className="grid gap-4 mb-4 grid-cols-1 sm:grid-cols-2">
             {/* Tài khoản */}
             <div className="col-span-1 sm:col-span-2">

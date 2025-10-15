@@ -11,7 +11,9 @@ export const SearchUser = createAsyncThunk(
   async (tuKhoa, { rejectWithValue }) => {
     try {
       const response = await axios({
-        url: `https://movienew.cybersoft.edu.vn/api/QuanLyNguoiDung/TimKiemNguoiDung?MaNhom=GP06&tuKhoa=${tuKhoa}`,
+        url: `https://movienew.cybersoft.edu.vn/api/QuanLyNguoiDung/TimKiemNguoiDung?MaNhom=GP06&tuKhoa=${encodeURIComponent(
+          tuKhoa
+        )}`,
         method: "GET",
         headers: {
           TokenCybersoft:

@@ -11,25 +11,36 @@ export default function ListUser() {
     data = [],
     error,
   } = useSelector((state) => state.ManaReducer);
-  const dataSearch = useSelector((state) => state.SearchUserReducer.data);
-  const loadingSearch = useSelector((state) => state.SearchUserReducer.loading);
-  const errorSearch = useSelector((state) => state.SearchUserReducer.error);
 
-  const [keyword, setKeyword] = useState({ tuKhoa: "" });
+  const {
+    data: dataSearch = [],
+    loading: loadingSearch,
+    error: errorSearch,
+  } = useSelector((state) => state.SearchUserReducer);
 
+  const [keyword, setKeyword] = useState("");
+
+  // 🔹 Load danh sách ban đầu
   useEffect(() => {
     dispatch(Management());
   }, [dispatch]);
 
-  const handleOnchange = (e) => {
-    const { name, value } = e.target;
-    setKeyword({ [name]: value });
-    if (value.trim() === "") dispatch(Management());
-  };
+  // 🔹 Debounce search: chỉ gọi API sau khi người dùng dừng gõ 500ms
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (keyword.trim() === "") {
+        dispatch(Management());
+      } else {
+        dispatch(SearchUser(keyword.trim()));
+      }
+    }, 500);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    dispatch(SearchUser(keyword.tuKhoa));
+    return () => clearTimeout(timer); // clear timer khi gõ tiếp
+  }, [keyword, dispatch]);
+
+  // 🔹 Khi người dùng gõ vào ô input
+  const handleOnchange = (e) => {
+    setKeyword(e.target.value);
   };
 
   const renderUser = () => {
@@ -55,42 +66,31 @@ export default function ListUser() {
       );
     }
 
-    if (dataSearch?.length > 0)
-      return dataSearch.map((user) => <User key={user.taiKhoan} data={user} />);
-    if (dataSearch?.length === 0 && keyword.tuKhoa !== "")
+    const listToRender = keyword.trim() !== "" ? dataSearch : data;
+
+    if (!listToRender?.length) {
       return (
         <tr>
           <td colSpan={6} className="text-center text-gray-500 py-4">
-            Không tìm thấy người dùng nào phù hợp.
-          </td>
-        </tr>
-      );
-
-    if (!data?.length) {
-      return (
-        <tr>
-          <td colSpan={6} className="text-center py-4">
-            <div className="flex justify-center">
-              <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-            </div>
+            {keyword.trim() !== ""
+              ? "Không tìm thấy người dùng nào phù hợp."
+              : "Danh sách người dùng trống."}
           </td>
         </tr>
       );
     }
 
-    return data.map((user) => <User key={user.taiKhoan} data={user} />);
+    return listToRender.map((user) => <User key={user.taiKhoan} data={user} />);
   };
 
   return (
-    <div className="container mx-auto my-10 px-4">
+    <div className="container mx-auto my-10 px-10">
       <h1 className="text-center font-bold mb-8 text-2xl text-amber-600">
         Danh sách người dùng
       </h1>
 
-      <form
-        onSubmit={handleSubmit}
-        className="relative flex flex-col sm:flex-row items-stretch gap-2 sm:gap-4 my-6"
-      >
+      {/* 🔹 Form search tự động */}
+      <div className="relative flex flex-col sm:flex-row items-stretch gap-2 sm:gap-4 my-6">
         <div className="relative flex-1">
           <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
             <svg
@@ -113,21 +113,16 @@ export default function ListUser() {
             type="search"
             id="search"
             name="tuKhoa"
+            value={keyword}
             onChange={handleOnchange}
             className="block w-full p-3 pl-10 text-sm text-black border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500"
             placeholder="Tìm kiếm theo tên, tài khoản hoặc số điện thoại"
           />
         </div>
+      </div>
 
-        <button
-          type="submit"
-          className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-6 py-3 transition"
-        >
-          Tìm kiếm
-        </button>
-      </form>
-
-      <div className="relative overflow-x-auto shadow-md sm:rounded-xl max-h-[600px]">
+      {/* 🔹 Bảng danh sách */}
+      <div className="relative overflow-x-auto overflow-y-auto shadow-md sm:rounded-xl max-h-[600px]">
         <table className="min-w-full text-sm text-left text-gray-700 border border-gray-200">
           <thead className="sticky top-0 z-10 text-xs uppercase bg-gradient-to-r from-red-800 to-black text-white">
             <tr>

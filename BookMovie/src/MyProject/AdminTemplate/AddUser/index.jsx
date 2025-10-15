@@ -99,12 +99,14 @@ export default function AddUser() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    dispatch(resetAddUser());
     dispatch(AddUserAT(formValue));
   };
 
   useEffect(() => {
-    if (data && Object.keys(data).length > 0 && !loading && !error) {
+    if (!loading && data && !error) {
       alert("✅ Thêm người dùng thành công!");
+      document.getElementById("formUser").reset();
       setFormValue({
         taiKhoan: "",
         matKhau: "",
@@ -116,7 +118,7 @@ export default function AddUser() {
       });
       dispatch(resetAddUser());
     }
-  }, [data, loading, error]);
+  }, [data, loading, error, dispatch]);
 
   return (
     <div className="mt-10 px-4">
@@ -126,7 +128,7 @@ export default function AddUser() {
 
       <div className="container mx-auto flex justify-center">
         <div className="w-full sm:w-3/4 md:w-2/3 lg:w-1/2">
-          {errormessage && (
+          {error && !loading && (
             <div className="flex justify-center items-center mb-4">
               <div className="bg-red-200 rounded px-5 py-2 w-full text-center">
                 <h3 className="text-red-600 font-semibold">{errormessage}</h3>
@@ -134,7 +136,7 @@ export default function AddUser() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="text-black">
+          <form id="formUser" onSubmit={handleSubmit} className="text-black">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Tài khoản */}
               <div className="flex flex-col">
