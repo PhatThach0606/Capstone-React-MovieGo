@@ -36,6 +36,7 @@ export default function EditFilm() {
     danhGia: "",
   });
 
+  const [hasSubmit, setHasSubmit] = useState(false);
   useEffect(() => {
     if (movie) {
       setFormValue({
@@ -55,6 +56,12 @@ export default function EditFilm() {
     }
   }, [movie]);
 
+  useEffect(() => {
+    if (hasSubmit && data) {
+      alert("Cập nhật thành công");
+      setHasSubmit(false);
+    }
+  });
   const handleOnchange = (e) => {
     const { name, value, checked, type } = e.target;
     if (name === "sapChieu") {
@@ -166,6 +173,7 @@ export default function EditFilm() {
     formData.append("danhGia", formValue.danhGia);
     if (hinhAnhFile) formData.append("File", hinhAnhFile);
     dispatch(EditMovie(formData));
+    setHasSubmit(true);
   };
 
   return (

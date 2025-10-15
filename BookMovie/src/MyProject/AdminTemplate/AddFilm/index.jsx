@@ -158,15 +158,20 @@ export default function AddNewFilm() {
   };
 
   return (
-    <div className="container mx-auto px-4 flex justify-center items-center max-h-screen">
+    <div className="container mx-auto px-4 flex justify-center items-center mt-10 ">
       <div className="w-full sm:w-3/4 lg:w-1/2 bg-white p-6 sm:p-8 rounded-2xl shadow-lg border border-gray-100">
         {message && (
           <div className="text-center  text-amber-600 font-semibold text-base sm:text-lg">
             {message}
           </div>
         )}
-
-        <form onSubmit={handleSubmit} className="text-black">
+        <h1 className="text-green-700 font-bold text-xl text-center">
+          Thêm Phim
+        </h1>
+        <form
+          onSubmit={handleSubmit}
+          className="text-black overflow-y-auto my-10"
+        >
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             {/* Tên phim */}
             <div className="sm:col-span-2">
