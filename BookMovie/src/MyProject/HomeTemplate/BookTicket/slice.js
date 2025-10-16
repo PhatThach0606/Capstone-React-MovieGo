@@ -44,4 +44,4 @@ const bookTicketSlice = createSlice({
   },
 });
 
-export const bookTicketReducer = bookTicketSlice.reducer;
+export default bookTicketSlice.reducer;

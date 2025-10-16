@@ -8,6 +8,7 @@ import AdminTemplate from "../MyProject/AdminTemplate";
 import Dashboard from "../MyProject/AdminTemplate/Dashboard";
 import Adminpage from "../MyProject/AdminTemplate/AdminPage";
 import AuthPage from "../MyProject/AdminTemplate/AuthPage";
+import ShowTime from "../MyProject/HomeTemplate/ShowTime";
 import { Route } from "react-router-dom";
 
 export const routes = [
@@ -19,7 +20,8 @@ export const routes = [
       { path: "list-movie", element: ListMovie },
       { path: "sign-up", element: SignUp, hiddenNav: true },
       { path: "detail/:id", element: DetailMovie, hiddenNav: true },
-      // { path: "book-ticket/:id", element: BookTicket, hiddenNav: true },
+      { path: "book-ticket/:id", element: BookTicket, hiddenNav: true },
+      { path: "showtime", element: ShowTime, hiddenNav: true },
     ],
   },
 

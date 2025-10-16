@@ -59,7 +59,7 @@ export default function DetailMovie() {
     );
   }
 
-  
+  console.log(movie.maPhim);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -328,35 +328,40 @@ export default function DetailMovie() {
                       </svg>
                       Quay lại
                     </Link>
-
-                    <button
-                      className={`inline-flex items-center px-6 py-2 rounded-lg transition-colors ${
-                        movie.dangChieu
-                          ? "bg-blue-600 text-white hover:bg-blue-700"
-                          : "bg-gray-400 text-white cursor-not-allowed"
-                      }`}
-                      disabled={!movie.dangChieu}
-                      onClick={() => {
-                        if (!movie.dangChieu) return;
-                        const maLichChieu = movie?.lichChieu?.[0]?.maLichChieu || id;
-                        window.location.href = `/book-ticket/${maLichChieu}`;
-                      }}
-                    >
-                      <svg
-                        className="w-4 h-4 mr-2"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
+                    <Link to="/showtime" state={{ maPhim: movie.maPhim }}>
+                      <button
+                        onClick={() =>
+                          localStorage.setItem("maPhim", movie.maPhim)
+                        }
+                        className={`inline-flex items-center px-6 py-2 rounded-lg transition-colors ${
+                          movie.dangChieu
+                            ? "bg-blue-600 text-white hover:bg-blue-700"
+                            : "bg-gray-400 text-white cursor-not-allowed"
+                        }`}
+                        disabled={!movie.dangChieu}
+                        // onClick={() => {
+                        //   if (!movie.dangChieu) return;
+                        //   const maLichChieu =
+                        //     movie?.lichChieu?.[0]?.maLichChieu || id;
+                        //   window.location.href = `/book-ticket/${maLichChieu}`;
+                        // }}
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
-                        />
-                      </svg>
-                      {movie.dangChieu ? "Đặt vé" : "Chưa mở bán"}
-                    </button>
+                        <svg
+                          className="w-4 h-4 mr-2"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+                          />
+                        </svg>
+                        {movie.dangChieu ? "Đặt vé" : "Chưa mở bán"}
+                      </button>
+                    </Link>
                   </div>
                 </div>
               </div>

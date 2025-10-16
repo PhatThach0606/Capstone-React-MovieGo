@@ -1,28 +1,31 @@
-import { useState } from "react";
+import React from "react";
+import "./seat.css";
 
-export default function Seat({ seat, onSelect }) {
-  const [selected, setSelected] = useState(false);
-  const isDisabled = !!seat?.daDat;
+export default function Seat({ seat, selected = false, onToggle }) {
+  const isBooked = !!seat?.daDat;
+  const isVip = !!seat?.loaiGhe && seat.loaiGhe.toLowerCase().includes("vip");
 
   const handleClick = () => {
-    if (isDisabled) return;
-    setSelected((prev) => !prev);
-    if (typeof onSelect === "function") onSelect(seat);
+    if (isBooked) return;
+    if (typeof onToggle === "function") onToggle(seat);
   };
 
-  const classes = [
-    "border",
-    "p-2",
-    "hover:cursor-pointer",
-    "rounded",
-    isDisabled ? "bg-gray-500 cursor-not-allowed text-white" : "",
-    !isDisabled && selected ? "bg-rose-600 text-white" : "bg-green-600 hover:bg-green-700 text-white",
+  const cls = [
+    "seat-btn",
+    isBooked ? "booked" : "available",
+    selected ? "selected" : "",
+    isVip ? "vip" : "",
   ]
     .filter(Boolean)
     .join(" ");
 
   return (
-    <button onClick={handleClick} className={classes} disabled={isDisabled}>
+    <button
+      title={isBooked ? "Đã đặt" : seat?.tenGhe}
+      className={cls}
+      onClick={handleClick}
+      disabled={isBooked}
+    >
       {seat?.tenGhe}
     </button>
   );
