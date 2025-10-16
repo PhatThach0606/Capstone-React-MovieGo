@@ -1,44 +1,30 @@
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams, useNavigate, NavLink } from "react-router-dom";
-import { fetchBoxOffice } from "./slice";
-
+import { fetchBoxOffice } from "./../BookTicket/slice";
+import { useLocation } from "react-router-dom";
 export default function BookTicket() {
-  const { id } = useParams();
-  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { data, loading, error } = useSelector((s) => s.bookTicketReducer);
-  const [selectedSeats, setSelectedSeats] = useState([]);
-
+  const location = useLocation();
+  const maLichChieu =
+    location.state?.maLichChieu || localStorage.getItem("maLichChieu");
   useEffect(() => {
-    if (!id) return;
-    dispatch(fetchBoxOffice(id));
-  }, [dispatch, id]);
+    dispatch(fetchBoxOffice(maLichChieu));
+  }, []);
 
-  const seats = useMemo(() => data?.danhSachGhe || [], [data]);
+  const { data, error, loading } = useSelector(
+    (state) => state.bookTicketSlice
+  );
 
-  const toggleSeat = (seat) => {
-    if (seat.daDat) return;
-    setSelectedSeats((prev) => {
-      const exists = prev.find((s) => s.maGhe === seat.maGhe);
-      if (exists) return prev.filter((s) => s.maGhe !== seat.maGhe);
-      return [...prev, seat];
-    });
-  };
-
-  if (loading)
-    return <div className="text-center py-10">Đang tải phòng vé...</div>;
-  if (error)
-    return (
-      <div className="text-center py-10 text-red-600">
-        Lỗi tải dữ liệu: {String(error)}
-      </div>
-    );
-
-  const isLoggedIn = !!localStorage.getItem("user");
+  console.log(data);
 
   return (
-    <div className="container mx-auto px-4 py-6 ">
+    <div>
+      <h1>Book movie</h1>
+    </div>
+  );
+}
+{
+  /* <div className="container mx-auto px-4 py-6 ">
       <div className="mb-4">
         <button
           className="px-4 py-2 rounded-lg border"
@@ -108,6 +94,5 @@ export default function BookTicket() {
           Đặt vé
         </button>
       </div>
-    </div>
-  );
+    </div> */
 }

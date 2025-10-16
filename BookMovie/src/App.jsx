@@ -16,6 +16,7 @@ import EditFilm from "./MyProject/AdminTemplate/EditPhim";
 import ListUser from "./MyProject/AdminTemplate/ListUser";
 import AddUser from "./MyProject/AdminTemplate/AddUser";
 import EditUser from "./MyProject/AdminTemplate/EditUser";
+
 function App() {
   return (
     <>
@@ -27,7 +28,7 @@ function App() {
             <Route path="list-movie" element={<ListMovie />} />
             <Route path="sign-up" element={<SignUp />} />
             <Route path="sign-in" element={<SignIn />} />
-            <Route path="book-ticket/:id" element={<BookTicket />} />
+            <Route path="book-ticket" element={<BookTicket />} />
             <Route path="detail/:id" element={<DetailMovie />} />
             <Route path="showtime" element={<ShowTime />} />
           </Route>

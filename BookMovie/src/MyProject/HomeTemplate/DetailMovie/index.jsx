@@ -330,6 +330,9 @@ export default function DetailMovie() {
                     </Link>
                     <Link to="/showtime" state={{ maPhim: movie.maPhim }}>
                       <button
+                        onClick={() =>
+                          localStorage.setItem("maPhim", movie.maPhim)
+                        }
                         className={`inline-flex items-center px-6 py-2 rounded-lg transition-colors ${
                           movie.dangChieu
                             ? "bg-blue-600 text-white hover:bg-blue-700"

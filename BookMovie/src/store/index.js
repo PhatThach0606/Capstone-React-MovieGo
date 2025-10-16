@@ -15,9 +15,9 @@ import EditUserReducer from "./../MyProject/AdminTemplate/EditUser/slice";
 import AddUserReducer from "./../MyProject/AdminTemplate/AddUser/slice";
 import SignUpReducer from "./../MyProject/HomeTemplate/SignUp/slice";
 import SignInReducer from "./../MyProject/HomeTemplate/SignIn/slice";
-import { bookTicketReducer } from "./../MyProject/HomeTemplate/BookTicket/slice";
 import SearchUserReducer from "./../MyProject/AdminTemplate/ListUser/Search";
 import ShowTimeReducer from "./../MyProject/HomeTemplate/ShowTime/slice";
+import bookTicketSlice from "./../MyProject/HomeTemplate/BookTicket/slice";
 
 export const store = configureStore({
   reducer: {
@@ -37,7 +37,7 @@ export const store = configureStore({
     AddUserReducer,
     SignUpReducer,
     SignInReducer,
-    bookTicketReducer,
+    bookTicketSlice,
     SearchUserReducer,
     ShowTimeReducer,
   },
